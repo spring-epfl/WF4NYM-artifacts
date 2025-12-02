@@ -1,0 +1,14 @@
+[Unit]
+Description=nym proxy service
+After=network.target nym-gateway.service
+
+[Service]
+User=root
+Environment=####TODO Put your nym folder here####
+ExecStart=/usr/bin/env ip netns exec netns1 ${NYM_PATH}/target/release/nym-socks5-client run --id proxy
+Restart=on-abort
+KillSignal=SIGINT # gracefully kill the process when stopping the service. Allows node to unregister cleanly.
+LimitNOFILE=65535 # this sets a higher ulimit for your mixnode, so it will still work as the network grows
+
+[Install]
+WantedBy=multi-user.target

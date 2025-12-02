@@ -1,0 +1,12 @@
+[Unit]
+Description=tor sock node
+
+[Service]
+User=root
+ExecStart=/usr/bin/env ip netns exec netns1 /usr/bin/tor
+Restart=on-abort
+KillSignal=SIGINT # gracefully kill the process when stopping the service. Allows node to unregister cleanly.
+LimitNOFILE=65535 # this sets a higher ulimit for your mixnode, so it will still work as the network grows
+
+[Install]
+WantedBy=multi-user.target

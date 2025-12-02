@@ -1,0 +1,12 @@
+[Unit]
+Description=nym requester service
+After=network.target nym-client.service
+
+[Service]
+User=root
+Environment=####TODO Put your nym folder here####
+ExecStart=${NYM_PATH}/target/release/nym-network-requester run --id nym-requester --open-proxy true
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
