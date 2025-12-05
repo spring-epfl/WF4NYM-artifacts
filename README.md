@@ -79,18 +79,71 @@ Install dependencies using the provided `requirements.txt`:
 pip install -r requirements.txt
 ```
 
+## Artifact Evaluation
+
+**For detailed artifact evaluation information, please see [ARTIFACT-APPENDIX.md](ARTIFACT-APPENDIX.md).**
+
+The ARTIFACT-APPENDIX.md file contains:
+- Complete installation and setup instructions
+- Step-by-step reproduction instructions for all main results
+- Expected outputs and validation criteria
+- Information about artifact badges (Available, Functional, Reproduced)
+
+## Quick Start
+
+1. **Clone and setup**:
+   ```bash
+   git clone https://github.com/[organization]/Artifacts_PETs_WF4NYM.git
+   cd Artifacts_PETs_WF4NYM
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
+2. **Download data** (if not included):
+   ```bash
+   wget https://zenodo.org/record/XXXXXXX/files/data.tar.gz
+   tar -xzf data.tar.gz
+   ```
+
+3. **Run quick validation test** (~30 minutes):
+   ```bash
+   cd correlation
+   # [Follow instructions in ARTIFACT-APPENDIX.md for quick validation]
+   ```
+
+4. **For full reproduction** (~24-48 hours):
+   ```bash
+   # [Follow step-by-step instructions in ARTIFACT-APPENDIX.md]
+   ```
+
 ## Citation
 
 If you use this artifact, please cite:
 
-```
-[Citation to be added upon publication]
+```bibtex
+@inproceedings{wf4nym2025,
+  title={Website Fingerprinting on Nym: Attacks and Defenses},
+  author={[Authors]},
+  booktitle={Privacy Enhancing Technologies Symposium (PETs)},
+  year={2025}
+}
 ```
 
 ## License
 
-[License information to be added]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+**Note**: Some components use code from external projects with their own licenses:
+- Defense implementations: [WebsiteFingerprinting](https://github.com/websitefingerprinting/WebsiteFingerprinting) (MIT License)
+- Attack implementations: [ExplainWF](https://explainwf-popets2023.github.io/) ([License])
 
 ## Contact
 
-[Contact information to be added]
+For questions or issues regarding this artifact, please:
+- Open an issue on GitHub: [https://github.com/[organization]/Artifacts_PETs_WF4NYM/issues](https://github.com/[organization]/Artifacts_PETs_WF4NYM/issues)
+- Contact the authors: [email@example.com]
+
+## Acknowledgments
+
+We thank the developers of the WebsiteFingerprinting and ExplainWF projects for making their code publicly available.

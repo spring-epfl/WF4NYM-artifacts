@@ -14,7 +14,7 @@ Scripts for automated website traffic capture using Firefox. Includes the browse
 Pipeline for converting raw PCAP captures into ML-ready traffic traces. Processes include TCP traffic extraction, website aggregation, and trace formatting. See the subdirectory README for detailed pipeline documentation.
 
 ### `analysis/`
-Jupyter notebooks for generating WTF4NYM defense traces (`cover_traffic.ipynb`) and computing latency/bandwidth overhead metrics (`overheads.ipynb`) across different configurations.
+Jupyter notebooks for generating WTF4NYM defense traces (`cover_traffic.ipynb`), computing latency/bandwidth overhead metrics (`overheads.ipynb`) across different configurations and converting traffic captures to ML-ready format on Nym mixnet and Tor network traffic.
 
 ## Workflow
 

@@ -33,3 +33,6 @@ Thumbs.db
 *.tmp
 *.bak
 *.log
+
+# ExplainWF framework (cloned externally)
+WF_attacks/explainwf-popets2023.github.io/

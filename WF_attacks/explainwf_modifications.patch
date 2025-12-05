@@ -1,0 +1,249 @@
+diff --git a/ml/code/classifiers.py b/ml/code/classifiers.py
+index 054dd42..e2f1303 100644
+--- a/ml/code/classifiers.py
++++ b/ml/code/classifiers.py
+@@ -114,9 +114,9 @@ def compute_stats(ytrue, ypred, binary=True):
+     cm = sklearn.metrics.confusion_matrix(ytrue, ypred)
+ 
+     if binary:
+-        recall = sklearn.metrics.recall_score(ytrue, ypred)
+-        precision = sklearn.metrics.precision_score(ytrue, ypred)
+-
++        recall = sklearn.metrics.recall_score(ytrue, ypred, zero_division=0)
++        precision = sklearn.metrics.precision_score(ytrue, ypred, zero_division=0)
++        f1 = sklearn.metrics.f1_score(ytrue, ypred, zero_division=0)
+         # First index is true label
+         # Second index is predicted label
+         tn = int(cm[0, 0])
+@@ -130,8 +130,9 @@ def compute_stats(ytrue, ypred, binary=True):
+             fpr = float("nan")
+     else:
+         average = "macro"
+-        recall = sklearn.metrics.recall_score(ytrue, ypred, average=average)
+-        precision = sklearn.metrics.precision_score(ytrue, ypred, average=average)
++        recall = sklearn.metrics.recall_score(ytrue, ypred, average=average, zero_division=0)
++        precision = sklearn.metrics.precision_score(ytrue, ypred, average=average, zero_division=0)
++        f1 = sklearn.metrics.f1_score(ytrue, ypred, average=average, zero_division=0)
+         tn = None
+         tp = None
+         fn = None
+@@ -142,6 +143,7 @@ def compute_stats(ytrue, ypred, binary=True):
+         "acc": acc,
+         "recall": recall,
+         "precision": precision,
++        "f1": f1,
+         "fpr": fpr,
+         "tp": tp,
+         "fp": fp,
+diff --git a/ml/code/common.py b/ml/code/common.py
+index 9b1d61c..9d2cc54 100644
+--- a/ml/code/common.py
++++ b/ml/code/common.py
+@@ -204,6 +204,9 @@ def convert_directions_to_nn_repr(directions, n=5000):
+     data = np.zeros(shape=(len(directions), n))
+ 
+     for idx, direction in enumerate(directions):
++        if len(direction) > n:
++            print(f"direction {len(direction)} > n {n}")
++            direction = direction[:n]
+         data[idx, : len(direction)] = _adjust_directions(direction)
+ 
+     return data
+@@ -213,7 +216,13 @@ def convert_directions_times_to_tiktok_repr(directions, times, n=5000):
+     data = np.zeros(shape=(len(directions), n))
+ 
+     for idx, (direction, time) in enumerate(zip(directions, times)):
++        if len(direction) > n:
++            print(f"direction {len(direction)} > n {n}")
++            direction = direction[:n]
+         data[idx, : len(direction)] = _adjust_directions(direction)
++        if len(time) > n:
++            print(f"times {len(time)} > n {n}")
++            time = time[:n]
+         data[idx, : len(time)] *= time
+ 
+     return data
+diff --git a/ml/code/test_models.py b/ml/code/test_models.py
+index 9359233..a94fdb9 100755
+--- a/ml/code/test_models.py
++++ b/ml/code/test_models.py
+@@ -15,15 +15,31 @@ from sklearn.metrics import accuracy_score, confusion_matrix
+ from tensorflow.keras.utils import to_categorical
+ 
+ 
++#models = ["kfp", "nn"]
+ def main(args):
+     logging.basicConfig(level=logging.INFO, stream=sys.stderr)
+     logging.info(f"Program arguments: {args}")
+-
+-    _, X_test, _, y_test = pickle.load(args.examples_file)
+-    args.examples_file.close()
+-
+-    for model_filepath in args.model_filepaths:
+-        logging.info("BEGIN model load")
++    
++    # Define models based on command-line arguments
++    models = []
++    if not args.no_kfp:
++        models.append("kfp")
++    if not args.no_nn:
++        models.append("nn")
++    if not args.no_tt:
++        models.append("tt")
++    if not args.no_svm:
++        models.append("svm")
++
++    # Load test data
++    with open(args.examples_file, 'rb') as ef:
++        _, X_test, _, y_test = pickle.load(ef)
++
++    for model_name in models:
++        model_filepath = Path(args.model_folder) / f"{model_name}.tar.gz"
++        output_filepath = Path(args.output_folder) / f"output_{model_name}.json"
++
++        logging.info(f"BEGIN model load: {model_filepath}")
+         model = classifiers.read_classifier_from_tarfile_gzipped(model_filepath)
+         logging.info("END model load")
+ 
+@@ -36,14 +52,14 @@ def main(args):
+             X = common.convert_records_to_cumul_repr(X_test)
+         elif features == "kfp":
+             logging.info("k-fingerprinting Classifier")
+-            parallel = True
++            parallel = False
+             X = common.convert_records_to_kfp(X_test, parallel)
+         elif features == "nn":
+             logging.info("DF classifier")
+-            X = common.convert_records_to_nn_repr(X_test)
++            X = common.convert_records_to_nn_repr(X_test, 10000)
+         elif features == "tt":
+             logging.info("Tik-Tok classifier")
+-            X = common.convert_records_to_tiktok_repr(X_test)
++            X = common.convert_records_to_tiktok_repr(X_test, 10000)
+         else:
+             assert False
+ 
+@@ -51,6 +67,12 @@ def main(args):
+         y_pred = model.predict(X)
+         logging.info("END model predict")
+ 
++        if features == "kfp":
++            logging.info("Saving k-fingerprinting feature importances")
++            features_importance = model._model.feature_importances_.tolist()
++            with open(str(output_filepath).replace(".json", "_features.json"), 'w') as f:
++                json.dump(features_importance, f)
++
+         binary = len(set(y_test)) == 2
+ 
+         stats = classifiers.compute_stats(y_test, y_pred, binary=binary)
+@@ -58,22 +80,26 @@ def main(args):
+         stats["training_set"] = model.metadata["training"]
+         stats["training_stem"] = Path(model.metadata["training"]).stem
+         stats["confusion"] = stats["confusion"].tolist()
+-        stats["test_set"] = args.examples_file.name
+-        stats["test_stem"] = Path(args.examples_file.name).stem
++        stats["test_set"] = str(args.examples_file)
++        stats["test_stem"] = Path(args.examples_file).stem
+ 
+         if args.log_stats:
+             logging.info(stats)
+ 
+-        json.dump(stats, args.output_file)
+-        args.output_file.close()
++        with open(output_filepath, 'w') as of:
++            json.dump(stats, of)
+ 
+ 
+ def parse_args():
+     parser = argparse.ArgumentParser()
+-    parser.add_argument("examples_file", type=argparse.FileType("rb"))
+-    parser.add_argument("output_file", type=argparse.FileType("w"))
+-    parser.add_argument("model_filepaths", nargs="*")
+-    parser.add_argument("-l", "--log_stats", action="store_true")
++    parser.add_argument("examples_file", type=str, help="Path to the examples file")
++    parser.add_argument("output_folder", type=str, help="Path to the output folder")
++    parser.add_argument("model_folder", type=str, help="Path to the model folder base name")
++    parser.add_argument("--no_nn", action="store_true", help="Exclude the neural network model")
++    parser.add_argument("--no_svm", action="store_true", help="Exclude the SVM model")
++    parser.add_argument("--no_kfp", action="store_true", help="Exclude the k-fingerprinting model")
++    parser.add_argument("--no_tt", action="store_true", help="Exclude the Tik-Tok model")
++    parser.add_argument("-l", "--log_stats", action="store_true", help="Log stats to console")
+     return parser.parse_args()
+ 
+ 
+diff --git a/ml/code/train_models.py b/ml/code/train_models.py
+index 69931a3..913fc76 100755
+--- a/ml/code/train_models.py
++++ b/ml/code/train_models.py
+@@ -14,6 +14,7 @@ import logging
+ from pathlib import Path
+ import pickle
+ import sys
++import os
+ 
+ import common
+ import classifiers
+@@ -31,13 +32,14 @@ def log_training_accuracy(model, X_train, y_train):
+ def save_model(model_dirpath, model_desc, model):
+     output_path = Path(model_dirpath, f"{model_desc}.tar.gz")
+     output_path.parent.mkdir(exist_ok=True)
++    print(f"File will be save in {output_path}")
+     classifiers.write_classifier_into_tarfile_gzipped(model, output_path)
+ 
+ 
+ def main(args):
+     logging.basicConfig(level=logging.INFO, stream=sys.stderr)
+     logging.info(f"Program arguments: {args}")
+-
++    os.makedirs(args.model_dirpath, exist_ok=True)
+     X_train, _, y_train, _ = pickle.load(args.examples_file)
+     args.examples_file.close()
+ 
+@@ -51,7 +53,7 @@ def main(args):
+         X_val, _, y_val, _ = pickle.load(args.cv_file)
+ 
+     if not args.no_kfp:
+-        parallel = True
++        parallel = False
+         X_train_kfp = common.convert_records_to_kfp(X_train, parallel)
+ 
+         if args.open_world_nmon_pages is not None:
+@@ -70,7 +72,7 @@ def main(args):
+         save_model(args.model_dirpath, f"kfp{args.model_tag}", kfp)
+ 
+     if not args.no_nn:
+-        X_train_nn = common.convert_records_to_nn_repr(X_train)
++        X_train_nn = common.convert_records_to_nn_repr(X_train, 10000)
+         nclasses = np.max(y_train) + 1
+         npackets = X_train_nn.shape[1]
+         nepochs = 100
+@@ -84,7 +86,7 @@ def main(args):
+         save_model(args.model_dirpath, f"nn{args.model_tag}", nn)
+ 
+     if not args.no_tt:
+-        X_train_tt = common.convert_records_to_tiktok_repr(X_train)
++        X_train_tt = common.convert_records_to_tiktok_repr(X_train, 10000)
+         nclasses = np.max(y_train) + 1
+         npackets = X_train_tt.shape[1]
+         nepochs = 100
+diff --git a/ml/code/util.py b/ml/code/util.py
+index 6903f9d..c88adcf 100644
+--- a/ml/code/util.py
++++ b/ml/code/util.py
+@@ -17,8 +17,14 @@ def check_intersection(train_flows, test_flows):
+ 
+ def make_tempdir():
+     try:
+-        tmp_dirpath = Path(tempfile.mkdtemp(), 'workdir')
+-        Path.mkdir(tmp_dirpath, parents=True)
++        # Define tmp/ directory inside the current folder
++        tmp_root = Path.cwd() / "tmp"
++        tmp_root.mkdir(parents=True, exist_ok=True)
++
++        # Generate a random folder name and create the directory
++        tmp_dirpath = tmp_root / f"{uuid.uuid4()}"
++        tmp_dirpath.mkdir(parents=True)
++
+     except Exception as e:
+         logging.error(e)
+         return None
