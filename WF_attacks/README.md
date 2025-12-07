@@ -4,7 +4,7 @@ This directory contains the integration of the ExplainWF framework for evaluatin
 
 ## Overview
 
-We use the ExplainWF framework ([Khosravirad et al., PoPETs 2023](https://explainwf-popets2023.github.io/)) which implements multiple state-of-the-art WF attacks:
+We use the ExplainWF framework ([Jansen et al., PoPETs 2023](https://explainwf-popets2023.github.io/)) which implements multiple state-of-the-art WF attacks:
 - **k-FP** (k-Fingerprinting): Random Forest-based classifier
 - **DF** (Deep Fingerprinting): Deep neural network classifier
 - **Tik-Tok**: Timing-aware deep learning classifier  
@@ -70,7 +70,7 @@ The `train_test.py` script performs **5-fold cross-validation** training and eva
 
 ```bash
 
-python train_test.py ../../../data/train_test_WF/configuration00_default.pkl ./ 
+python train_test.py ../../../../data/train_test_WF/configuration00_default.pkl ./
 ```
 
 **Parameters:**
@@ -80,19 +80,6 @@ python train_test.py ../../../data/train_test_WF/configuration00_default.pkl ./
   - Use 95 for full dataset
   - Use 55 for reduced dataset
   - Omit for closed-world scenario
-
-**Training Specific Models:**
-
-```bash
-# Train only k-FP (Random Forest)
-python train_test.py input.pkl output_dir/ --no_nn --no_tt --no_svm
-
-# Train only DF (Deep Fingerprinting)
-python train_test.py input.pkl output_dir/ --no_kfp --no_tt --no_svm
-
-# Train only Tik-Tok
-python train_test.py input.pkl output_dir/ --no_kfp --no_nn --no_svm
-```
 
 **What Happens During 5-Fold CV:**
 
@@ -163,7 +150,7 @@ Each output JSON file contains:
   - Complete 5-fold CV: ~5-15 hours per configuration
   
 - **Memory Requirements**:
-  - k-FP: ~8GB RAM
-  - DF/Tik-Tok: ~16GB RAM, 8GB+ GPU VRAM recommended
+  - k-FP: ~32GB RAM
+  - DF/Tik-Tok: ~64GB RAM
 
 - **Reproducibility**: Neural network results may vary slightly between runs due to random initialization, even with fixed seeds

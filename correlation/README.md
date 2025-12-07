@@ -1,6 +1,6 @@
 # MixMatch Flow Correlation Analysis
 
-Deep learning-based traffic correlation attack for website fingerprinting evaluation. This implementation is based on the MixMatch drift classifier from the PoPETs 2024.2 paper.
+Deep learning-based traffic correlation attack for website fingerprinting evaluation. This implementation is based on the MixMatch drift classifier from [1].
 
 ## Overview
 
@@ -56,3 +56,5 @@ python scripts/compare_roc_curves.py \
     --output-dir roc_comparison \
     --title "MixMatch Model Comparison: With vs Without defence"
 ```
+
+[1] Lennart Oldenburg, Marc Juarez, Enrique Argones Rúa, Claudia Diaz (2023). MixMatch: Flow Matching for Mixnet Traffic. Privacy Enhancing Technologies Symposium (PETS) 2024.

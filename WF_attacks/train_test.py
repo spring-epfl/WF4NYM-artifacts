@@ -108,10 +108,10 @@ def parse_args():
     p = argparse.ArgumentParser(
         description="5-fold stratified CV on combined X_train+X_test/y_train+y_test"
     )
-    p.add_argument("output_dir",
-                   help="Directory to save evaluation JSONs")
     p.add_argument("pickle_files", nargs="+",
                    help="Pickle files with (X_train, X_test, y_train, y_test)")
+    p.add_argument("output_dir",
+                   help="Directory to save evaluation JSONs")
     return p.parse_args()
 
 

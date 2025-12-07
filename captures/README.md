@@ -4,17 +4,17 @@ This directory contains scripts and notebooks for capturing, processing, and ana
 
 ## Directory Structure
 
-### `setup_scripts/`
-System configuration scripts for setting up the capture environment. Includes network namespace setup, service configurations for Nym proxy/requester components, and system initialization scripts.
+### `analysis/`
+Jupyter notebooks for generating WTF4NYM defense traces (`cover_traffic.ipynb`), computing latency/bandwidth overhead metrics (`overheads.ipynb`) across different configurations and converting traffic captures to ML-ready format on Nym mixnet and Tor network traffic.
 
 ### `capture_scripts/`
 Scripts for automated website traffic capture using Firefox. Includes the browser automation script, network capture tools, and Firefox configuration files for consistent data collection across Tor and Nym networks.
 
 ### `process_raw_packets/`
-Pipeline for converting raw PCAP captures into ML-ready traffic traces. Processes include TCP traffic extraction, website aggregation, and trace formatting. See the subdirectory README for detailed pipeline documentation.
+Pipeline for converting raw PCAP captures into ML-ready traffic traces. Processes include TCP traffic extraction, website aggregation, and trace formatting. See the subdirectory `README.md` for detailed pipeline documentation.
 
-### `analysis/`
-Jupyter notebooks for generating WTF4NYM defense traces (`cover_traffic.ipynb`), computing latency/bandwidth overhead metrics (`overheads.ipynb`) across different configurations and converting traffic captures to ML-ready format on Nym mixnet and Tor network traffic.
+### `setup_scripts/`
+System configuration scripts for setting up the capture environment. Includes network namespace setup, service configurations for Nym proxy/requester components, and system initialization scripts.
 
 ## Workflow
 
