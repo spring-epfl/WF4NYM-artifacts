@@ -7,7 +7,7 @@ website fingerprinting data. Orchestrates:
 1. PCAP extraction (process_packets.py)
 2. Webpage-to-website aggregation (webpages-to-websites.py)
 3. Format conversion for ML (tcp_to_ml.py - if needed)
-4. Defense simulation (tor_defence.py)
+4. Defense simulation (trace_extraction.py)
 """
 
 import os
@@ -168,14 +168,14 @@ def step3_convert_to_ml_format(script_dir, aggregated_folder, ml_folder):
 def step4_extract_traces(script_dir, input_folder, output_folder,
                         websites_file, urls_file, max_samples):
     """
-    Step 4: Extract individual traces from aggregated data (tor_defence.py).
+    Step 4: Extract individual traces from aggregated data (trace_extraction.py).
     
     Returns:
         bool: Success status
     """
     cmd = [
         sys.executable,
-        os.path.join(script_dir, "tor_defence.py"),
+        os.path.join(script_dir, "trace_extraction.py"),
         "--input-path", input_folder,
         "--output-path", output_folder,
         "--websites-file", websites_file,

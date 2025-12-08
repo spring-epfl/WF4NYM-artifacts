@@ -2,7 +2,7 @@
 
 Paper title: **Website Fingerprinting on Nym: Attacks and Defenses**
 
-Authors: Eric Jolles, Simon Wicky, Harry Halpin, Ania M. Piotrowska, Carmela Troncoso
+Authors: Eric Jollès, Simon Wicky, Harry Halpin, Ania M. Piotrowska, Carmela Troncoso
 
 Requested Badge(s):
   - [x] **Available**
@@ -16,7 +16,7 @@ This artifact accompanies the paper "Website Fingerprinting on Nym: Attacks and 
 The artifact provides:
 1. **Traffic capture pipeline**: Scripts for capturing website traffic through Tor and Nym networks
 2. **WTF4NYM defense implementation**: Defense with configurable parameters
-3. **MixMatch flow correlation attack**: Deep learning model (based on PoPETs 2024.2) for correlating traffic flows at proxy and network requester observation points
+3. **Flow correlation attack**: Deep learning model  for correlating traffic flows at proxy and network requester observation points. ML model from "MixMatch: Flow Matching for Mixnet Traffic", Oldenburg et al.  
 4. **Feature importance analysis**: Tools for analyzing which traffic features contribute to website fingerprinting attacks
 5. **Datasets**: Pre-captured traffic traces for monitored and unmonitored websites under various network configurations
 
@@ -33,11 +33,6 @@ The artifact enables reproduction of the main experimental results including:
 ## Basic Requirements
 
 ### Hardware Requirements
-
-**Minimum requirements** (for running pre-trained models and analyzing results):
-- CPU: Modern multi-core processor (Intel/AMD x86-64)
-- RAM: 8GB minimum
-- Storage:  100GB free disk space (90GB for datasets, 10GB for models and results)
 
 **Recommended for full reproduction** (training models from scratch):
 - CPU: 8+ cores
@@ -77,11 +72,12 @@ The artifact can run on commodity hardware without GPU (using CPU), but training
 - tqdm >= 4.62.0
 
 **Datasets**:
-The artifact includes pre-captured traffic datasets organized in the `data/` directory:
+The artifact includes pre-captured traffic datasets available on [Zenodo](https://doi.org/10.5281/zenodo.17840656) and organized in the `data/` directory:
 - `data/full_list/`: Complete dataset with monitored and unmonitored websites for Tor and Nym (labnet and mainnet)
 - `data/reduced_list/`: Multiple configurations testing different WTF4NYM defense parameters
 - `data/traffic_captures/`: Raw traffic captures organized by configuration
-- `data/train_test_WF/`: Pre-processed pickle files ready for WF attack training (33 configurations, generated from `traffic_captures/` using `captures/analysis/transform_to_ml.ipynb`)
+- `data/train_test_WF/`: Pre-processed pickle files ready for WF attack training (33 configurations, generated from `traffic_captures/` using the [`transform_to_ml.ipynb`](https://github.com/spring-epfl/WF4NYM-artifacts/blob/main/captures/analysis/transform_to_ml.ipynb) notebook)
+- `data/overheads/`: Overhead analysis data including latency and bandwidth measurements
 
 See `data/README.md` for complete dataset documentation.
 
@@ -107,14 +103,18 @@ https://github.com/spring-epfl/WF4NYM-artifacts
 
 The repository is publicly accessible without any restrictions.
 
-**Datasets and Models**:
-Zenodo DOI: [To be added upon upload - will be in format https://doi.org/10.5281/zenodo.XXXXXXX]
+**Datasets**:
+Zenodo DOI: https://doi.org/10.5281/zenodo.17840656
 
-**License**:
-MIT License (see LICENSE file in repository)
+The Zenodo repository contains the complete datasets as separate ZIP archives:
+- `full_list.zip` - Complete dataset with monitored and unmonitored websites
+- `reduced_list.zip` - Various Nym mixnet configurations and defense mechanisms
+- `traffic_captures.zip` - Individual trace files for all configurations
+- `train_test_WF.zip` - Pre-processed pickle files ready for WF attack training
+- `overheads.zip` - Overhead analysis data (latency, bandwidth, traffic volume)
 
 **Permanent Archive**:
-After acceptance, we will create a permanent release with a specific git tag and archive on Zenodo.
+The artifact is permanently archived on Zenodo with a specific DOI for long-term accessibility.
 
 ### Set up the environment
 
@@ -141,7 +141,30 @@ pip install -r requirements.txt
 
 Expected output: All packages install successfully without errors.
 
-**Note**: The datasets are included in the repository. If evaluating from a fresh clone, the `data/` directory should already contain all necessary datasets (~100GB). No separate download is required.
+**Step 4: Download datasets from Zenodo**
+
+Download the dataset ZIP files from Zenodo (https://doi.org/10.5281/zenodo.17840656) and extract them into the `data/` directory:
+
+```bash
+cd data/
+# Download and extract each dataset
+wget https://zenodo.org/records/17840656/files/full_list.zip
+wget https://zenodo.org/records/17840656/files/reduced_list.zip
+wget https://zenodo.org/records/17840656/files/traffic_captures.zip
+wget https://zenodo.org/records/17840656/files/train_test_WF.zip
+wget https://zenodo.org/records/17840656/files/overheads.zip
+
+# Extract all datasets
+unzip full_list.zip
+unzip reduced_list.zip
+unzip traffic_captures.zip
+unzip train_test_WF.zip
+unzip overheads.zip
+
+cd ..
+```
+
+Expected output: All ZIP files are downloaded and extracted successfully. The `data/` directory should contain approximately 100GB of data across all subdirectories.
 
 ### Testing the Environment
 
@@ -354,3 +377,20 @@ Each component directory contains a detailed README:
 - `correlation/README.md` - Flow correlation experiments
 - `feature_importance/README.md` - Feature analysis methodology
 - `data/README.md` - Dataset organization and descriptions
+
+## Contact
+
+If there are questions about our tools or paper, please either file an issue or contact `eric.jolles (AT) epfl.ch`
+
+## Research Paper
+
+You can cite our work with the following BibTeX entry:
+
+```bibtex
+@inproceedings{jolles2026WFonNym,
+ author = {Jollès, Eric and Wicky, Simon and Ania M., Piotrowsak and Harry, Halpin an Carmela, Troncoso},
+ booktitle = {},
+ title = {{Website Fingerprinting on Nym: Attacks and Defenses}},
+ year = {2026},
+}
+```

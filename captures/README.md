@@ -14,7 +14,7 @@ Scripts for automated website traffic capture using Firefox. Includes the browse
 Pipeline for converting raw PCAP captures into ML-ready traffic traces. Processes include TCP traffic extraction, website aggregation, and trace formatting. See the subdirectory `README.md` for detailed pipeline documentation.
 
 ### `setup_scripts/`
-System configuration scripts for setting up the capture environment. Includes network namespace setup, service configurations for Nym proxy/requester components, and system initialization scripts.
+System configuration scripts for setting up the capture environment. Includes network namespace setup, service configurations for Nym proxy and network requester components, and system initialization scripts.
 
 ## Workflow
 
