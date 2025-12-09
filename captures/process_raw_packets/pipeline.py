@@ -182,6 +182,7 @@ def step4_extract_traces(script_dir, input_folder, output_folder,
         "--webpages-file", urls_file,
         "--max-samples", str(max_samples),
     ]
+    print(cmd)
     
     return run_command(cmd, "Step 4: Extract individual traces")
 
@@ -343,8 +344,8 @@ Example usage:
     
     # Step 4: Extract individual traces
     if not args.skip_trace_extraction:
-        # Use aggregated data as input (or ml_format if step 3 was executed)
-        input_for_traces = paths['ml_format'] if not args.skip_ml_conversion else paths['aggregated']
+        # Use aggregated data as input (or aggregated_websites if step 2 was executed)
+        input_for_traces = paths['aggregated'] if not args.skip_ml_conversion else paths['aggregated']
         
         success = step4_extract_traces(
             script_dir, input_for_traces, paths['traces'],
