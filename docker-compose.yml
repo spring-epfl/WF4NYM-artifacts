@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  wf4nym:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: wf4nym-artifact:latest
+    container_name: wf4nym-artifact
+    ports:
+      - "8888:8888"
+    volumes:
+      # Mount the entire workspace to persist changes
+      - .:/workspace
+      # Optionally mount data directory separately if stored elsewhere
+      # - /path/to/data:/workspace/data
+    environment:
+      - PYTHONUNBUFFERED=1
+    working_dir: /workspace
+    command: jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
+    
+    # Alternative: Start a bash shell instead of Jupyter
+    # command: /bin/bash
+    
+    stdin_open: true
+    tty: true
