@@ -1,144 +1,52 @@
-# Artifact: Website Fingerprinting on Nym: Attacks and Defenses
+# Artifact Appendix
 
-**Paper**: Website Fingerprinting on Nym: Attacks and Defenses  
-**Conference**: Privacy Enhancing Technologies Symposium (PETs) 2026  
-**Authors**: Eric Jollès, Simon Wicky, Harry Halpin, Ania M. Piotrowska, Carmela Troncoso
+Paper title: **Website Fingerprinting on Nym: Attacks and Defenses**
 
-**Artifact Badges**:
-- ✓ **Available** - Publicly accessible on GitHub and Zenodo
-- ✓ **Functional** - Complete, documented, and executable
-- ✓ **Reproduced** - Main results reproducible
+Authors: Eric Jollès, Simon Wicky, Harry Halpin, Ania M. Piotrowska, Carmela Troncoso
 
-## Overview
+Requested Badge(s):
+  - [x] **Available**
+  - [x] **Functional**
+  - [x] **Reproduced**
 
-This artifact provides a complete package for evaluating Website Fingerprinting (WF) attacks and the WTF4NYM defense mechanism on the Nym mixnet and Tor network. The artifact enables reproduction of all main experimental results from the paper.
+## Description
 
-## Directory Structure
+This artifact accompanies the paper "Website Fingerprinting on Nym: Attacks and Defenses" accepted at Privacy Enhancing Technologies Symposium (PETs) 2025.
 
-### `captures/`
-Complete pipeline for traffic capture, processing, and analysis:
-- **`capture_scripts/`** - Automated website traffic capture using Firefox
-- **`process_raw_packets/`** - Pipeline to convert raw PCAP captures into ML-ready traces
-- **`setup_scripts/`** - System configuration for Tor and Nym network environments
-- **`analysis/`** - Jupyter notebooks for generating WTF4NYM defense traces and computing overhead metrics
+The artifact provides:
+1. **Traffic capture pipeline**: Scripts for capturing website traffic through Tor and Nym networks
+2. **WTF4NYM defense implementation**: Defense with configurable parameters
+3. **Flow correlation attack**: Deep learning model  for correlating traffic flows at proxy and network requester observation points. ML model from "MixMatch: Flow Matching for Mixnet Traffic", Oldenburg et al.  
+4. **Feature importance analysis**: Tools for analyzing which traffic features contribute to website fingerprinting attacks
+5. **Datasets**: Pre-captured traffic traces for monitored and unmonitored websites under various network configurations
 
-See `captures/README.md` for detailed workflow documentation.
+The artifact enables reproduction of the main experimental results including:
+- Flow correlation attack accuracy (ROC curves and AUC metrics)
+- Defense effectiveness evaluation (correlation attack performance with/without WTF4NYM)
+- Feature importance rankings
+- Defense overhead measurements (bandwidth and time)
 
-### `data/`
-Pre-captured traffic datasets across different network configurations:
-- **`full_list/`** - Complete dataset with monitored and unmonitored websites for Tor and Nym
-- **`reduced_list/`** - Various Nym mixnet configurations and defense mechanisms (33 configurations)
-- **`traffic_captures/`** - Individual trace files for all configurations
-- **`train_test_WF/`** - Pre-processed pickle files ready for WF attack training
-- **`overheads/`** - Overhead analysis data (latency, bandwidth, traffic volume)
+### Security/Privacy Issues and Ethical Concerns
 
-**Download from Zenodo**: https://doi.org/10.5281/zenodo.17840656 (~100GB total)
+**No security or privacy risks.** The artifact analyzes publicly accessible websites and does not include any personally identifiable information, vulnerable code, exploits, or security-disabling mechanisms. All website visits were automated and did not involve human subjects.
 
-See `data/README.md` for complete dataset documentation.
-
-### `correlation/`
-Deep learning-based MixMatch flow correlation attack implementation:
-- Neural network model for matching traffic flows at different observation points (proxy vs. network requester)
-- Training scripts for scenarios with and without WTF4NYM defense
-- ROC curve comparison tools for evaluating defense effectiveness
-
-Based on the MixMatch drift classifier. See `correlation/README.md` for usage examples.
-
-### `feature_importance/`
-Feature importance analysis using Random Forest classifiers:
-- Extracts and evaluates contribution of different feature groups (packet counts, timing, inter-arrival, n-grams, transposition, bursts)
-- Adapted from reWeFDE framework for measuring information leakage
-- Jupyter notebook pipeline for complete analysis
-
-See `feature_importance/README.md` for details on feature groups and methodology.
-
-### `WF_attacks/`
-Website Fingerprinting attack implementations:
-- Integration with ExplainWF framework
-- Support for multiple classifiers: k-FP, Deep Fingerprinting (DF), Tik-Tok, SVM
-- 5-fold cross-validation training pipeline
-- Patch file for ExplainWF modifications
-
-See `WF_attacks/README.md` for setup and usage instructions.
-
-## Quick Start
-
-### Option 1: Using Docker (Recommended)
-
-**Prerequisites**: Docker and Docker Compose installed
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/spring-epfl/WF4NYM-artifacts.git
-   cd Artifacts_PETs_WF4NYM
-   ```
-
-2. **Download datasets from Zenodo**:
-   ```bash
-   cd data/
-   wget https://zenodo.org/records/17840656/files/full_list.zip
-   wget https://zenodo.org/records/17840656/files/reduced_list.zip
-   wget https://zenodo.org/records/17840656/files/traffic_captures.zip
-   wget https://zenodo.org/records/17840656/files/train_test_WF.zip
-   wget https://zenodo.org/records/17840656/files/overheads.zip
-   
-   unzip full_list.zip && unzip reduced_list.zip && unzip traffic_captures.zip
-   unzip train_test_WF.zip && unzip overheads.zip
-   cd ..
-   ```
-
-3. **Build and run Docker container**:
-   ```bash
-   docker-compose up --build
-   ```
-
-4. **Access Jupyter notebook**:
-   - Open browser to: `http://localhost:8888`
-   - No token required (for artifact evaluation convenience)
-
-5. **Alternative: Interactive shell**:
-   ```bash
-   docker-compose run --rm wf4nym /bin/bash
-   ```
-
-### Option 2: Local Installation
-
-**Prerequisites**: 
-- Python 3.9
-- 16GB+ RAM recommended
-- GPU with CUDA support (optional, for faster training)
-
-1. **Clone and setup environment**:
-   ```bash
-   git clone https://github.com/spring-epfl/WF4NYM-artifacts.git
-   cd Artifacts_PETs_WF4NYM
-   python3.9 -m venv venv
-   source venv/bin/activate
-   pip install --upgrade pip
-   pip install -r requirements.txt
-   ```
-
-2. **Download datasets** (as shown above in Docker option)
-
-3. **Verify installation**:
-   ```bash
-   python3 -c "import torch; import numpy; import pandas; import sklearn; print('All dependencies installed successfully')"
-   ```
-
-## System Requirements
+## Basic Requirements
 
 ### Hardware Requirements
 
-**Minimum** (for basic functionality):
-- CPU: 4+ cores
-- RAM: 8GB
-- Storage: 120GB free disk space
-
-**Recommended** (for full reproduction):
-- CPU: 8+ cores (Intel Xeon or equivalent)
-- RAM: 16GB+
+**Recommended for full reproduction** (training models from scratch):
+- CPU: 8+ cores
+- RAM: 16GB or more
 - GPU: NVIDIA GPU with 8GB+ VRAM (CUDA-compatible)
-- Storage: 120GB free disk space
+- Storage: 100GB free disk space
+
+**Note**: The experiments reported in the paper were performed on:
+- CPU: Intel Xeon processors with 16 cores
+- RAM: 32GB
+- GPU: NVIDIA Tesla V100 (16GB VRAM) or similar
+- OS: Ubuntu 22.04 LTS
+
+The artifact can run on commodity hardware without GPU (using CPU), but training will take significantly longer (~4-5x).
 
 ### Software Requirements
 
@@ -146,35 +54,108 @@ See `WF_attacks/README.md` for setup and usage instructions.
 - Tested on: Ubuntu 20.04 and 22.04 LTS
 - Should work on: Any modern Linux distribution
 - May work on: macOS with appropriate dependencies
-- Not supported: Windows (use WSL2 or Docker)
+- Not supported: Windows (use WSL2)
 
-**Python**: Python 3.9
+**Python Environment**:
+- Python 3.8 or higher (tested with Python 3.9, 3.10)
 
-**Dependencies** (see `requirements.txt`):
-- PyTorch 2.5.1 (for neural networks and WF attacks)
-- NumPy 1.26.4
-- Pandas 2.2.3
-- Scikit-learn 1.6.1 (for Random Forest classifier)
-- Matplotlib 3.9.4
-- Seaborn 0.13.2
-- SciPy 1.13.1
-- Selenium 4.26.1
-- tqdm 4.67.1
-- Jupyter (installed via Docker or pip)
+**Python Dependencies** (see `requirements.txt`):
+- PyTorch >= 1.12.0 (for MixMatch neural network and WF attacks)
+- TensorFlow >= 2.8.0 (for Deep Fingerprinting and Tik-Tok models)
+- NumPy >= 1.21.0
+- Pandas >= 1.3.0
+- Scikit-learn >= 1.0.0 (for k-FP Random Forest classifier)
+- Matplotlib >= 3.5.0
+- Seaborn >= 0.11.0
+- Jupyter >= 1.0.0
+- Scapy >= 2.4.5 (for packet processing)
+- tqdm >= 4.62.0
 
-## Data Download
+**Datasets**:
+The artifact includes pre-captured traffic datasets available on [Zenodo](https://doi.org/10.5281/zenodo.17840656) and organized in the `data/` directory:
+- `data/full_list/`: Complete dataset with monitored and unmonitored websites for Tor and Nym (labnet and mainnet)
+- `data/reduced_list/`: Multiple configurations testing different WTF4NYM defense parameters
+- `data/traffic_captures/`: Raw traffic captures organized by configuration
+- `data/train_test_WF/`: Pre-processed pickle files ready for WF attack training (33 configurations, generated from `traffic_captures/` using the [`transform_to_ml.ipynb`](https://github.com/spring-epfl/WF4NYM-artifacts/blob/main/captures/analysis/transform_to_ml.ipynb) notebook)
+- `data/overheads/`: Overhead analysis data including latency and bandwidth measurements
 
-## Datasets
+See `data/README.md` for complete dataset documentation.
 
-The artifact includes pre-captured traffic datasets available on **Zenodo**: https://doi.org/10.5281/zenodo.17840656
+### Estimated Time and Storage Consumption
 
-### Download Instructions
+**Time Estimates**:
 
-**All datasets** (~100GB total):
+*Setup and Environment*:
+- Initial setup: 20-30 minutes
+
+*Individual Experiments*:
+- WF Attack training (per configuration, 5-fold CV): 4-8 hours with GPU, 20-40 hours CPU-only
+- Flow correlation training: 12-16 hours with GPU
+- Feature importance analysis: 2-3 hours
+- Defense overhead analysis: 30-45 minutes
+
+## Environment
+
+### Accessibility
+
+**Artifact Repository**: 
+https://github.com/spring-epfl/WF4NYM-artifacts
+
+The repository is publicly accessible without any restrictions.
+
+**Datasets**:
+Zenodo DOI: https://doi.org/10.5281/zenodo.17840656
+
+The Zenodo repository contains the complete datasets as separate ZIP archives:
+- `full_list.zip` - Complete dataset with monitored and unmonitored websites
+- `reduced_list.zip` - Various Nym mixnet configurations and defense mechanisms
+- `traffic_captures.zip` - Individual trace files for all configurations
+- `train_test_WF.zip` - Pre-processed pickle files ready for WF attack training
+- `overheads.zip` - Overhead analysis data (latency, bandwidth, traffic volume)
+
+**Permanent Archive**:
+The artifact is permanently archived on Zenodo with a specific DOI for long-term accessibility.
+
+### Set up the environment
+
+**Step 1: Clone the repository**
+
+```bash
+git clone git@github.com:spring-epfl/WF4NYM-artifacts.git
+cd Artifacts_PETs_WF4NYM
+```
+
+**Step 2: Set up Python virtual environment**
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+```
+
+**Step 3: Install dependencies**
+
+```bash
+pip install -r requirements.txt
+```
+
+Expected output: All packages install successfully without errors.
+
+**Step 4: Download datasets from Zenodo**
+
+Download the dataset ZIP files from Zenodo (https://doi.org/10.5281/zenodo.17840656) and extract them into the `data/` directory.
+
+**Option 1: Automated download script** (recommended):
+
+```bash
+./download_data.sh
+```
+
+**Option 2: Manual download**:
 
 ```bash
 cd data/
-# Download all ZIP files
+# Download and extract each dataset
 wget https://zenodo.org/records/17840656/files/full_list.zip
 wget https://zenodo.org/records/17840656/files/reduced_list.zip
 wget https://zenodo.org/records/17840656/files/traffic_captures.zip
@@ -191,212 +172,268 @@ unzip overheads.zip
 cd ..
 ```
 
-### Dataset Structure
+Expected output: All ZIP files are downloaded and extracted successfully. The `data/` directory should contain approximately 100GB of data across all subdirectories.
 
-After extraction, the `data/` directory contains:
+### Testing the Environment
 
-- **`full_list/`** - Complete dataset with monitored and unmonitored websites
-- **`reduced_list/`** - 33 different configurations testing various parameters:
-  - Baseline: Tor, Nym (labnet/mainnet), no proxy
-  - Defense mechanisms: FRONT, Tamaraw, WTF-PAD, WTF4NYM
-  - Parameter variations: Loop rates, mix delays, Poisson rates
-- **`traffic_captures/`** - Individual trace files (format: `<website_index>-<page_number>`)
-- **`train_test_WF/`** - Pre-processed pickle files for WF attacks (60/40 train/test split)
-- **`overheads/`** - Latency and bandwidth measurements
+The artifact can be tested using Docker to ensure a reproducible environment. Follow these steps to verify the setup and run basic functionality tests:
 
-See `data/README.md` for detailed documentation of all configurations.
+#### Quick Start with Docker
 
-## Main Experiments
+**Step 1: Build and launch the Docker container** (~10 minutes)
 
-### Experiment 1: Website Fingerprinting Attacks
+```bash
+cd Artifacts_PETs_WF4NYM
+docker compose up --build
+```
 
-**Purpose**: Evaluate k-FP, Deep Fingerprinting, Tik-Tok, and SVM attacks  
-**Paper Results**: Table 2, Table 4, Table 6, Table 7, Table 9  
-**Location**: `WF_attacks/`  
-**Documentation**: `WF_attacks/README.md`
+Expected output: Container builds successfully and Jupyter Lab starts on `http://localhost:8888`
 
-**Quick Run** (single configuration, ~4-8 hours with GPU):
+**Step 2: Open Jupyter Lab and start a terminal**
+
+1. Navigate to `http://localhost:8888/lab` in your web browser
+2. Click "Terminal" to open a terminal session inside the container
+
+**Step 3: Test traffic processing pipeline** (~1 minute)
+
+In the Jupyter Lab terminal, run:
+
+```bash
+python3 /workspace/captures/process_raw_packets/pipeline.py \
+    --pcap-folder /workspace/data/data_test \
+    --datasets data-normal \
+    --output-folder /workspace/data
+```
+
+Expected output: The pipeline processes the test dataset and creates the following populated directories:
+- `data/1_extracted_pcaps` - Extracted PCAP files
+- `data/2_aggregated_websites` - Aggregated website traffic
+- `data/3_ml_format` - Machine learning format files (including `data.pkl`)
+- `data/4_individual_traces` - Individual trace files
+
+**Step 4: Test feature importance analysis** (~2 minutes)
+
+1. In Jupyter Lab, navigate to `feature_importance/feature_importance.ipynb`
+2. Run all cells in the notebook (Cell → Run All)
+
+Expected output: The final cells display feature importance results with values close to 100%, since the test dataset contains two highly separable website classes.
+
+**Step 5: Test website fingerprinting attacks** (~15-20 minutes)
+
+In the Jupyter Lab terminal, run:
+
+```bash
+cd /workspace/WF_attacks/explainwf-popets2023.github.io/ml/code
+python3 -m venv venv
+source venv/bin/activate
+pip install -r ../requirements.txt  # ~3 minutes
+python train_test.py /workspace/data/3_ml_format/data.pkl /workspace/output  # ~15 minutes
+```
+
+Expected output: 
+- 5-fold cross-validation results are saved to `/workspace/output`
+- Accuracy metrics should be close to 1.0 (100%) since the test dataset has two highly separable classes
+
+
+#### Alternative: Testing Without Docker
+
+If you prefer to test without Docker, follow the manual setup steps described in the "Set up the environment" section above, then run the same test commands (adjusting paths as needed for your local environment).
+
+
+
+
+## Artifact Evaluation
+
+### Main Results and Claims
+
+List all your paper's results and claims that are supported by your submitted artifacts.
+
+#### Main Result 1: Website Fingerprinting Attacks on Nym/Tor
+
+Website fingerprinting attacks (k-FP, DF, Tik-Tok) achieve high accuracy on traffic captured through Tor and Nym networks. This claim is reproducible by executing [Experiment 1](#experiment-1-website-fingerprinting-attacks). We report these results in Table 2, Table 4, Table 6, Table 7 and Table 9 of our paper.
+
+#### Main Result 2: Flow Correlation Attack
+
+The MixMatch-based flow correlation attack can correlate traffic flows between different observation points in the Nym mixnet. This claim is reproducible by executing [Experiment 2](#experiment-2-flow-correlation-attacks). We report these results in Figure 7 of our paper.
+
+#### Main Result 3: Feature Importance Analysis
+
+Packet counts and timing features are the most important features for website fingerprinting attacks. This claim is reproducible by executing [Experiment 3](#experiment-3-feature-importance-analysis). We report these results in Table 3, Table 5, Table 8 and Table 9 of our paper.
+
+#### Main Result 4: Defense Effectiveness and Overhead
+
+WTF4NYM defense reduces attack accuracy while introducing acceptable bandwidth and time overhead. This claim is reproducible by executing [Experiment 4](#experiment-4-traffic-capture-and-defense-overhead-analysis). We report these results in Table 2, Table 4, Table 6 and Table 7 of our paper.
+
+### Experiments
+
+The artifact is organized into modular components, each with detailed instructions in their respective README files:
+
+#### Experiment 1: Website Fingerprinting Attacks
+
+- **Time**: 4-8 hours with GPU per configuration (5-fold CV), 20-40 hours CPU-only
+- **Storage**: ~20GB per configuration
+
+This experiment reproduces [Main Result 1](#main-result-1-website-fingerprinting-attacks-on-nymtor). Evaluate WF attacks (k-FP, DF, Tik-Tok, SVM) on captured traffic with different defense configurations.
+
+**Location**: `WF_attacks/`
+
+**Documentation**: See `WF_attacks/README.md` for detailed instructions on:
+- Setup (cloning ExplainWF framework and applying patches)
+- Training models with 5-fold cross-validation
+- Dataset format (pickle files in `data/train_test_WF/`)
+- Expected outputs and evaluation metrics
+
+**Key Command**:
 ```bash
 cd WF_attacks/explainwf-popets2023.github.io/ml/code
-python train_test.py output/ ../../../data/train_test_WF/configuration00_default.pkl
+python train_test.py <output_dir> <pickle_files...>
 ```
 
-### Experiment 2: Flow Correlation Attacks
+#### Experiment 2: Flow Correlation Attacks
 
-**Purpose**: MixMatch-based traffic correlation at different observation points  
-**Paper Results**: Figure 7  
-**Location**: `correlation/`  
-**Documentation**: `correlation/README.md`
+- **Time**: 12-16 hours with GPU
+- **Storage**: ~15GB
 
-**Quick Run** (~12-16 hours with GPU):
-```bash
-cd correlation
-bash launch_training.sh
-```
+This experiment reproduces [Main Result 2](#main-result-2-flow-correlation-attack). Train and evaluate MixMatch-based flow correlation models to match traffic at different observation points.
 
-### Experiment 3: Feature Importance Analysis
+**Location**: `correlation/`
 
-**Purpose**: Identify most important features for WF attacks  
-**Paper Results**: Table 3, Table 5, Table 8, Table 9  
-**Location**: `feature_importance/`  
-**Documentation**: `feature_importance/README.md`
+**Documentation**: See `correlation/README.md` for detailed instructions on:
+- Data preparation pipeline
+- Training correlation models with/without defense
+- ROC curve generation and comparison
+- Evaluation metrics
 
-**Quick Run** (Jupyter notebook, ~2-3 hours):
-```bash
-jupyter notebook feature_importance/feature_importance.ipynb
-```
+**Key Script**: `correlation/launch_training.sh`
 
-### Experiment 4: Defense Overhead Analysis
+#### Experiment 3: Feature Importance Analysis
 
-**Purpose**: Measure bandwidth and latency overhead of WTF4NYM  
-**Paper Results**: Table 2, Table 4, Table 6, Table 7  
-**Location**: `captures/analysis/`  
-**Documentation**: `captures/analysis/README.md`
+- **Time**: 2-3 hours
+- **Storage**: ~5GB
 
-**Quick Run** (Jupyter notebook, ~30-45 minutes):
-```bash
-jupyter notebook captures/analysis/overheads.ipynb
-```
+This experiment reproduces [Main Result 3](#main-result-3-feature-importance-analysis). Analyze which traffic features are most important for WF attacks using Random Forest feature importance.
 
-## Testing the Environment
+**Location**: `feature_importance/`
 
-**Test 1: Python dependencies**
-```bash
-python3 -c "import torch; import numpy; import pandas; import sklearn; print('All dependencies OK')"
-```
+**Documentation**: See `feature_importance/README.md` for detailed instructions on:
+- Feature extraction methodology
+- Random Forest training and feature importance computation
+- Visualization of results
 
-**Test 2: Dataset structure**
-```bash
-ls -lh data/train_test_WF/ | head -5
-```
-Expected: List of pickle files (e.g., `configuration00_default.pkl`, etc.)
+**Key Notebook**: `feature_importance/feature_importance.ipynb`
 
-**Test 3: ExplainWF integration** (after setup in `WF_attacks/README.md`)
-```bash
-cd WF_attacks/explainwf-popets2023.github.io/ml/code
-python3 -c "import classifiers; import common; print('ExplainWF modules loaded')"
-```
+#### Experiment 4: Traffic Capture and Defense Overhead Analysis
 
-## Time and Storage Estimates
+- **Time**: 30-45 minutes (using pre-captured data)
+- **Storage**: ~10GB
 
-**Setup**: 20-30 minutes  
-**Storage**: ~120GB (including datasets)
+This experiment reproduces [Main Result 4](#main-result-4-defense-effectiveness-and-overhead). Analyze pre-captured traffic with WTF4NYM defense applied and measure bandwidth/time overhead.
 
-**Experiment Runtimes**:
-- WF Attack (per config, 5-fold CV): 4-8 hours (GPU) / 20-40 hours (CPU)
-- Flow correlation: 12-16 hours (GPU)
-- Feature importance: 2-3 hours
-- Overhead analysis: 30-45 minutes
+**Location**: `captures/`
 
-## Reproducibility Notes
+**Documentation**: See `captures/README.md` and `captures/analysis/README.md` for detailed instructions on:
+- Traffic capture pipeline
+- Defense implementation and parameter configuration
+- Overhead computation methodology
+- Data transformation for ML experiments
 
-### What is Reproducible
+**Key Notebooks**:
+- `captures/analysis/overheads.ipynb` - Defense overhead analysis
+- `captures/analysis/transform_to_ml.ipynb` - Convert captures to ML format
 
-All main experimental results can be reproduced:
-1. ✓ WF attack accuracies (Table 2, 4, 6, 7, 9) - within 2-5% variance
-2. ✓ Flow correlation ROC curves (Figure 7) - qualitatively reproducible
-3. ✓ Feature importance rankings (Table 3, 5, 8, 9) - stable rankings
-4. ✓ Defense overheads (Table 2, 4, 6, 7) - deterministic from datasets
+#### Dataset Organization
 
-### Limitations
+**Location**: `data/`
 
-1. **Traffic Collection**: Original capture scripts provided but not reproducible during evaluation
-   - Requires Nym API keys and specific network setup
-   - Network conditions vary over time
-   - **Mitigation**: Complete pre-captured datasets provided
+**Documentation**: See `data/README.md` for:
+- Complete dataset structure and organization
+- Mapping between configurations and defense parameters
+- Dataset sizes and descriptions
+- Pre-processed pickle files for WF attacks
 
-2. **Training Variability**: Neural networks are non-deterministic
-   - Results may vary 2-5% across runs
-   - GPU/CPU differences affect training
-   - **Mitigation**: 5-fold cross-validation for robust evaluation
+## Limitations
 
-3. **Computational Resources**: GPU significantly accelerates training
-   - CPU training is 4-5x slower but produces equivalent results
-   - Full evaluation of all 33 configs is time-intensive
+The following aspects should be noted when reproducing results:
 
-## Docker Usage Details
+1. **Traffic Collection**: 
+   - The original traffic collection scripts in `captures/` are provided but are **not reproducible** for artifact evaluation
+   - Requires specific network setup (Tor/Nym clients, network configuration) and **Nym API keys**
+   - Traffic capture is a **long-running process** (days to weeks depending on the dataset size)
+   - Network conditions, Tor circuit selection, and Nym network state vary over time, so recaptured traffic will differ from our datasets
+   - **Mitigation**: We provide complete pre-captured datasets for all experiments, so reviewers do not need to run the capture scripts
 
-### Build Image
-```bash
-docker build -t wf4nym-artifact .
-```
+2. **Training Variability**:
+   - Neural network training is non-deterministic even with fixed random seeds due to GPU parallelism and framework differences
+   - Results may vary by 2-5% across training runs
+   - 5-fold cross-validation provides more robust evaluation but increases training time
 
-### Run Jupyter Notebook
-```bash
-docker-compose up
-# Access at http://localhost:8888
-```
+3. **Computational Resources**:
+   - WF attack training (especially DF and Tik-Tok models) benefits significantly from GPU acceleration
+   - Training on CPU is possible but takes 4-5x longer
+   - Full 5-fold CV on all 33 dataset configurations is time-intensive
 
-### Interactive Shell
-```bash
-docker-compose run --rm wf4nym /bin/bash
-```
+4. **ExplainWF Framework**:
+   - Requires cloning and patching the external ExplainWF repository
+   - Our modifications are provided as a patch file in `WF_attacks/explainwf_modifications.patch`
+   - See `WF_attacks/README.md` for detailed integration instructions
 
-### Run Specific Experiment
-```bash
-docker-compose run --rm wf4nym bash -c "cd WF_attacks/explainwf-popets2023.github.io/ml/code && python train_test.py output/ ../../../data/train_test_WF/configuration00_default.pkl"
-```
+Despite these limitations, the artifact is **Functional** (all components can be executed) and **Reproduced** (main results can be validated within acceptable variance).
 
-### Mount External Data Directory
-Edit `docker-compose.yml` to mount data from external location:
-```yaml
-volumes:
-  - .:/workspace
-  - /path/to/downloaded/data:/workspace/data
-```
+## Notes on Reusability
 
-## Artifact Accessibility
+This artifact is designed for reuse and extension beyond the paper:
 
-**GitHub Repository**: https://github.com/spring-epfl/WF4NYM-artifacts  
-**Zenodo Archive**: https://doi.org/10.5281/zenodo.17840656  
-**License**: MIT (see individual component licenses in respective directories)
+**Modularity**:
+Each component can be used independently:
+- `captures/`: Traffic collection pipeline and defense implementations
+- `WF_attacks/`: Website fingerprinting attack evaluation framework
+- `correlation/`: Flow correlation attack implementation
+- `feature_importance/`: Feature analysis tools
+- `data/`: Organized datasets with clear directory structure
 
-**Permanent Archive**: This artifact is permanently archived on Zenodo with a DOI for long-term accessibility.
+**Extensibility**:
 
-## Complete Documentation
+1. **Testing new defense configurations**:
+   - Modify defense parameters in `captures/process_raw_packets/pipeline.py`
+   - Generate new defended traces using `captures/analysis/transform_to_ml.ipynb`
+   - Evaluate using existing WF attack and correlation frameworks
 
-For complete artifact evaluation information including:
-- Detailed badge requirements
-- Step-by-step reproduction instructions
-- Expected outputs and validation criteria
-- Reusability guidelines
+2. **Adding new WF attack models**:
+   - The ExplainWF framework integration in `WF_attacks/` supports multiple classifiers
+   - Add new models following the classifier interface in `explainwf-popets2023.github.io/ml/code/classifiers.py`
+   - Use the same 5-fold CV evaluation pipeline via `train_test.py`
 
-**See**: [ARTIFACT-APPENDIX.md](ARTIFACT-APPENDIX.md)
+3. **Analyzing different traffic features**:
+   - Feature extraction code in `feature_importance/extract.py`
+   - Modify or extend feature sets
+   - Re-run Random Forest importance analysis
 
-## Dependencies and External Code
+4. **Working with new datasets**:
+   - Follow the pickle format: `(X_train, X_test, y_train, y_test)`
+   - See `captures/analysis/transform_to_ml.ipynb` for data preparation
+   - Datasets must follow the sequence format (list of packet directions/sizes)
 
-This artifact integrates code from external projects:
-
-**Defense Implementations**:
-- WTF-PAD, FRONT, Tamaraw from: https://github.com/websitefingerprinting/WebsiteFingerprinting
-
-**Attack Implementations**:
-- ExplainWF framework: https://explainwf-popets2023.github.io/
-
-**Flow Correlation**:
-- Based on MixMatch: "MixMatch: Flow Matching for Mixnet Traffic" (Oldenburg et al.)
-
-All external code retains its original licensing. Our modifications are provided as patches.
-
-## Citation
-
-If you use this artifact in your research, please cite:
-
-```bibtex
-@inproceedings{jolles2026WFonNym,
-  author = {Jollès, Eric and Wicky, Simon and Halpin, Harry and Piotrowska, Ania M. and Troncoso, Carmela},
-  title = {{Website Fingerprinting on Nym: Attacks and Defenses}},
-  booktitle = {Privacy Enhancing Technologies Symposium (PETs)},
-  year = {2026}
-}
-```
+**Documentation**:
+Each component directory contains a detailed README:
+- `captures/README.md` - Traffic capture and processing pipeline
+- `WF_attacks/README.md` - WF attack evaluation and ExplainWF integration
+- `correlation/README.md` - Flow correlation experiments
+- `feature_importance/README.md` - Feature analysis methodology
+- `data/README.md` - Dataset organization and descriptions
 
 ## Contact
 
-For questions or issues regarding this artifact:
-- **GitHub Issues**: https://github.com/spring-epfl/WF4NYM-artifacts/issues
-- **Email**: eric.jolles@epfl.ch
+If there are questions about our tools or paper, please either file an issue or contact `eric.jolles (AT) epfl.ch`
 
-## Acknowledgments
+## Research Paper
 
-We thank the developers of the WebsiteFingerprinting and ExplainWF projects for making their code publicly available, and the Nym and Tor communities for their privacy-enhancing technologies.
+You can cite our work with the following BibTeX entry:
+
+```bibtex
+@inproceedings{jolles2026WFonNym,
+ author = {Jollès, Eric and Wicky, Simon and Ania M., Piotrowsak and Harry, Halpin and Carmela, Troncoso},
+ booktitle = {},
+ title = {{Website Fingerprinting on Nym: Attacks and Defenses}},
+ year = {2026},
+}
+```
