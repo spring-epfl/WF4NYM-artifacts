@@ -2,7 +2,7 @@
 
 Paper title: **Website Fingerprinting on Nym: Attacks and Defenses**
 
-Authors: Eric Jollès, Simon Wicky, Harry Halpin, Ania M. Piotrowska, Carmela Troncoso
+Authors: Eric Jollès, Simon Wicky, Ania M. Piotrowska, Harry Halpin, Carmela Troncoso
 
 Requested Badge(s):
   - [x] **Available**
