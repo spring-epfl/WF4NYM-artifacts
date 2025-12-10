@@ -20,12 +20,6 @@ The artifact provides:
 4. **Feature importance analysis**: Tools for analyzing which traffic features contribute to website fingerprinting attacks
 5. **Datasets**: Pre-captured traffic traces for monitored and unmonitored websites under various network configurations
 
-The artifact enables reproduction of the main experimental results including:
-- Flow correlation attack accuracy (ROC curves and AUC metrics)
-- Defense effectiveness evaluation (correlation attack performance with/without WTF4NYM)
-- Feature importance rankings
-- Defense overhead measurements (bandwidth and time)
-
 ### Security/Privacy Issues and Ethical Concerns
 
 **No security or privacy risks.** The artifact analyzes publicly accessible websites and does not include any personally identifiable information, vulnerable code, exploits, or security-disabling mechanisms. All website visits were automated and did not involve human subjects.
@@ -34,13 +28,7 @@ The artifact enables reproduction of the main experimental results including:
 
 ### Hardware Requirements
 
-**Recommended for full reproduction** (training models from scratch):
-- CPU: 8+ cores
-- RAM: 16GB or more
-- GPU: NVIDIA GPU with 8GB+ VRAM (CUDA-compatible)
-- Storage: 100GB free disk space
-
-**Note**: The experiments reported in the paper were performed on:
+The experiments reported in the paper were performed on:
 - CPU: Intel Xeon processors with 16 cores
 - RAM: 32GB
 - GPU: NVIDIA Tesla V100 (16GB VRAM) or similar
@@ -54,22 +42,13 @@ The artifact can run on commodity hardware without GPU (using CPU), but training
 - Tested on: Ubuntu 20.04 and 22.04 LTS
 - Should work on: Any modern Linux distribution
 - May work on: macOS with appropriate dependencies
-- Not supported: Windows (use WSL2)
 
 **Python Environment**:
-- Python 3.8 or higher (tested with Python 3.9, 3.10)
+- Python 3.9
 
-**Python Dependencies** (see `requirements.txt`):
-- PyTorch >= 1.12.0 (for MixMatch neural network and WF attacks)
-- TensorFlow >= 2.8.0 (for Deep Fingerprinting and Tik-Tok models)
-- NumPy >= 1.21.0
-- Pandas >= 1.3.0
-- Scikit-learn >= 1.0.0 (for k-FP Random Forest classifier)
-- Matplotlib >= 3.5.0
-- Seaborn >= 0.11.0
-- Jupyter >= 1.0.0
-- Scapy >= 2.4.5 (for packet processing)
-- tqdm >= 4.62.0
+**Python Dependencies**:
+See `requirements.txt`
+
 
 **Datasets**:
 The artifact includes pre-captured traffic datasets available on [Zenodo](https://doi.org/10.5281/zenodo.17840656) and organized in the `data/` directory:
@@ -176,7 +155,7 @@ Expected output: All ZIP files are downloaded and extracted successfully. The `d
 
 ### Testing the Environment
 
-The artifact can be tested using Docker to ensure a reproducible environment. Follow these steps to verify the setup and run basic functionality tests:
+The artifact can be tested using Docker to ensure a reproducible environment. The following steps demonstrate the complete workflow: processing raw packet captures (PCAP files) into machine learning format, then using this processed data for feature importance analysis and website fingerprinting attacks.
 
 #### Quick Start with Docker
 
@@ -206,10 +185,10 @@ python3 /workspace/captures/process_raw_packets/pipeline.py \
 ```
 
 Expected output: The pipeline processes the test dataset and creates the following populated directories:
-- `data/1_extracted_pcaps` - Extracted PCAP files
-- `data/2_aggregated_websites` - Aggregated website traffic
-- `data/3_ml_format` - Machine learning format files (including `data.pkl`)
-- `data/4_individual_traces` - Individual trace files
+- `/workspace/data/1_extracted_pcaps` - Extracted PCAP files
+- `/workspace/data/2_aggregated_websites` - Aggregated website traffic
+- `/workspace/data/3_ml_format` - Machine learning format files (including `data.pkl`)
+- `/workspace/data/4_individual_traces` - Individual trace files
 
 **Step 4: Test feature importance analysis** (~2 minutes)
 
@@ -245,8 +224,6 @@ If you prefer to test without Docker, follow the manual setup steps described in
 ## Artifact Evaluation
 
 ### Main Results and Claims
-
-List all your paper's results and claims that are supported by your submitted artifacts.
 
 #### Main Result 1: Website Fingerprinting Attacks on Nym/Tor
 
@@ -353,35 +330,17 @@ This experiment reproduces [Main Result 4](#main-result-4-defense-effectiveness-
 
 ## Limitations
 
-The following aspects should be noted when reproducing results:
 
-1. **Traffic Collection**: 
-   - The original traffic collection scripts in `captures/` are provided but are **not reproducible** for artifact evaluation
-   - Requires specific network setup (Tor/Nym clients, network configuration) and **Nym API keys**
-   - Traffic capture is a **long-running process** (days to weeks depending on the dataset size)
-   - Network conditions, Tor circuit selection, and Nym network state vary over time, so recaptured traffic will differ from our datasets
-   - **Mitigation**: We provide complete pre-captured datasets for all experiments, so reviewers do not need to run the capture scripts
+**Traffic Collection**: 
+- The original traffic collection scripts in `captures/` are provided but are **not reproducible** for artifact evaluation
+- Requires specific network setup (Tor/Nym clients, network configuration) and **Nym API keys**
+- Traffic capture is a **long-running process** (days to weeks depending on the dataset size)
+- Network conditions, Tor circuit selection, and Nym network state vary over time, so recaptured traffic will differ from our datasets
+- **Mitigation**: We provide complete pre-captured datasets for all experiments, so reviewers do not need to run the capture scripts
 
-2. **Training Variability**:
-   - Neural network training is non-deterministic even with fixed random seeds due to GPU parallelism and framework differences
-   - Results may vary by 2-5% across training runs
-   - 5-fold cross-validation provides more robust evaluation but increases training time
-
-3. **Computational Resources**:
-   - WF attack training (especially DF and Tik-Tok models) benefits significantly from GPU acceleration
-   - Training on CPU is possible but takes 4-5x longer
-   - Full 5-fold CV on all 33 dataset configurations is time-intensive
-
-4. **ExplainWF Framework**:
-   - Requires cloning and patching the external ExplainWF repository
-   - Our modifications are provided as a patch file in `WF_attacks/explainwf_modifications.patch`
-   - See `WF_attacks/README.md` for detailed integration instructions
-
-Despite these limitations, the artifact is **Functional** (all components can be executed) and **Reproduced** (main results can be validated within acceptable variance).
+Despite this limitation, the artifact is **Functional** (all components can be executed) and **Reproduced** (main results can be validated within acceptable variance).
 
 ## Notes on Reusability
-
-This artifact is designed for reuse and extension beyond the paper:
 
 **Modularity**:
 Each component can be used independently:
@@ -390,28 +349,6 @@ Each component can be used independently:
 - `correlation/`: Flow correlation attack implementation
 - `feature_importance/`: Feature analysis tools
 - `data/`: Organized datasets with clear directory structure
-
-**Extensibility**:
-
-1. **Testing new defense configurations**:
-   - Modify defense parameters in `captures/process_raw_packets/pipeline.py`
-   - Generate new defended traces using `captures/analysis/transform_to_ml.ipynb`
-   - Evaluate using existing WF attack and correlation frameworks
-
-2. **Adding new WF attack models**:
-   - The ExplainWF framework integration in `WF_attacks/` supports multiple classifiers
-   - Add new models following the classifier interface in `explainwf-popets2023.github.io/ml/code/classifiers.py`
-   - Use the same 5-fold CV evaluation pipeline via `train_test.py`
-
-3. **Analyzing different traffic features**:
-   - Feature extraction code in `feature_importance/extract.py`
-   - Modify or extend feature sets
-   - Re-run Random Forest importance analysis
-
-4. **Working with new datasets**:
-   - Follow the pickle format: `(X_train, X_test, y_train, y_test)`
-   - See `captures/analysis/transform_to_ml.ipynb` for data preparation
-   - Datasets must follow the sequence format (list of packet directions/sizes)
 
 **Documentation**:
 Each component directory contains a detailed README:
