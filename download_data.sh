@@ -1,8 +1,12 @@
 #!/bin/bash
 # Download datasets from Zenodo
-# This script should be run from /workspace/data directory
+# This script downloads data to the data/ directory
 
 set -e
+
+# Create data directory if it doesn't exist
+mkdir -p data
+cd data
 
 echo "Downloading datasets from Zenodo (https://doi.org/10.5281/zenodo.17840656)..."
 echo "Total download size: ~100GB"

@@ -143,7 +143,15 @@ Expected output: All packages install successfully without errors.
 
 **Step 4: Download datasets from Zenodo**
 
-Download the dataset ZIP files from Zenodo (https://doi.org/10.5281/zenodo.17840656) and extract them into the `data/` directory:
+Download the dataset ZIP files from Zenodo (https://doi.org/10.5281/zenodo.17840656) and extract them into the `data/` directory.
+
+**Option 1: Automated download script** (recommended):
+
+```bash
+./download_data.sh
+```
+
+**Option 2: Manual download**:
 
 ```bash
 cd data/
@@ -168,36 +176,71 @@ Expected output: All ZIP files are downloaded and extracted successfully. The `d
 
 ### Testing the Environment
 
-To verify that the environment is set up correctly, run the following basic functionality tests:
+The artifact can be tested using Docker to ensure a reproducible environment. Follow these steps to verify the setup and run basic functionality tests:
 
-**Test 1: Verify Python dependencies**
+#### Quick Start with Docker
 
-```bash
-python3 -c "import torch; import tensorflow; import sklearn; import numpy; import pandas; print('All core dependencies imported successfully')"
-```
-
-Expected output: `All core dependencies imported successfully`
-
-**Test 2: Verify dataset structure**
+**Step 1: Build and launch the Docker container** (~10 minutes)
 
 ```bash
-ls -lh data/train_test_WF/ | head -5
+cd Artifacts_PETs_WF4NYM
+docker compose up --build
 ```
 
-Expected output: List of pickle files (e.g., `configuration00_default.pkl`, `configuration01_lqp10.pkl`, etc.)
+Expected output: Container builds successfully and Jupyter Lab starts on `http://localhost:8888`
 
-**Test 3: Test ExplainWF integration (after setup)**
+**Step 2: Open Jupyter Lab and start a terminal**
 
-After completing the ExplainWF setup in `WF_attacks/README.md`:
+1. Navigate to `http://localhost:8888/lab` in your web browser
+2. Click "Terminal" to open a terminal session inside the container
+
+**Step 3: Test traffic processing pipeline** (~1 minute)
+
+In the Jupyter Lab terminal, run:
 
 ```bash
-cd WF_attacks/explainwf-popets2023.github.io/ml/code
-python3 -c "import classifiers; import common; print('ExplainWF modules loaded successfully')"
+python3 /workspace/captures/process_raw_packets/pipeline.py \
+    --pcap-folder /workspace/data/data_test \
+    --datasets data-normal \
+    --output-folder /workspace/data
 ```
 
-Expected output: `ExplainWF modules loaded successfully`
+Expected output: The pipeline processes the test dataset and creates the following populated directories:
+- `data/1_extracted_pcaps` - Extracted PCAP files
+- `data/2_aggregated_websites` - Aggregated website traffic
+- `data/3_ml_format` - Machine learning format files (including `data.pkl`)
+- `data/4_individual_traces` - Individual trace files
 
-If all tests pass, the environment is ready for artifact evaluation.
+**Step 4: Test feature importance analysis** (~2 minutes)
+
+1. In Jupyter Lab, navigate to `feature_importance/feature_importance.ipynb`
+2. Run all cells in the notebook (Cell → Run All)
+
+Expected output: The final cells display feature importance results with values close to 100%, since the test dataset contains two highly separable website classes.
+
+**Step 5: Test website fingerprinting attacks** (~15-20 minutes)
+
+In the Jupyter Lab terminal, run:
+
+```bash
+cd /workspace/WF_attacks/explainwf-popets2023.github.io/ml/code
+python3 -m venv venv
+source venv/bin/activate
+pip install -r ../requirements.txt  # ~3 minutes
+python train_test.py /workspace/data/3_ml_format/data.pkl /workspace/output  # ~15 minutes
+```
+
+Expected output: 
+- 5-fold cross-validation results are saved to `/workspace/output`
+- Accuracy metrics should be close to 1.0 (100%) since the test dataset has two highly separable classes
+
+
+#### Alternative: Testing Without Docker
+
+If you prefer to test without Docker, follow the manual setup steps described in the "Set up the environment" section above, then run the same test commands (adjusting paths as needed for your local environment).
+
+
+
 
 ## Artifact Evaluation
 
