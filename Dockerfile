@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     patch \
     sudo \
+    tcpdump \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
@@ -88,5 +89,8 @@ RUN echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 # Fix permissions on workspace (will be applied at runtime for mounted volumes)
 RUN chmod -R 777 /workspace
 
+# Switch to root user and ensure permissions
+USER root
+
 # Default command: Start Jupyter notebook
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
+CMD ["sh", "-c", "chmod -R 777 /workspace 2>/dev/null || true && jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''"]

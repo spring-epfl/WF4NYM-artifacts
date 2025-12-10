@@ -9,9 +9,9 @@ services:
     container_name: wf4nym-artifact
     ports:
       - "8888:8888"
-    volumes:
+    #volumes:
       # Mount the entire workspace to persist changes
-      - .:/workspace
+      #- .:/workspace
       # Optionally mount data directory separately if stored elsewhere
       # - /path/to/data:/workspace/data
     environment:
