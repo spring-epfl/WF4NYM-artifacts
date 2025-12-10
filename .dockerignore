@@ -50,6 +50,12 @@ Thumbs.db
 
 # ExplainWF (will be cloned in Docker build)
 WF_attacks/explainwf-popets2023.github.io/
+WF_attacks/explainwf-popets2023.github.io/
+captures/process_raw_packets/1_extracted_pcaps/
+captures/process_raw_packets/2_aggregated_websites/
+captures/process_raw_packets/3_ml_format/
+captures/process_raw_packets/4_individual_traces/
+feature_importance/leakages/
 
 # Output directories
 output/

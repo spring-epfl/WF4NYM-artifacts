@@ -244,33 +244,25 @@ If you prefer to test without Docker, follow the manual setup steps described in
 
 ## Artifact Evaluation
 
-### Results and Claims
+### Main Results and Claims
 
-The artifact supports reproduction of the following main claims from the paper:
+List all your paper's results and claims that are supported by your submitted artifacts.
 
-#### Result 1: Website Fingerprinting Attacks on Nym/Tor
+#### Main Result 1: Website Fingerprinting Attacks on Nym/Tor
 
-**Claim**: Website fingerprinting attacks (k-FP, DF, Tik-Tok) achieve high accuracy on traffic captured through Tor and Nym networks.
+Website fingerprinting attacks (k-FP, DF, Tik-Tok) achieve high accuracy on traffic captured through Tor and Nym networks. This claim is reproducible by executing [Experiment 1](#experiment-1-website-fingerprinting-attacks). We report these results in Table 2, Table 4, Table 6, Table 7 and Table 9 of our paper.
 
-**Reproduced by**: WF Attack experiments using ExplainWF framework (see `WF_attacks/README.md`)
+#### Main Result 2: Flow Correlation Attack
 
-#### Result 2: Flow Correlation Attack
+The MixMatch-based flow correlation attack can correlate traffic flows between different observation points in the Nym mixnet. This claim is reproducible by executing [Experiment 2](#experiment-2-flow-correlation-attacks). We report these results in Figure 7 of our paper.
 
-**Claim**: The MixMatch-based flow correlation attack can correlate traffic flows between different observation points in the Nym mixnet.
+#### Main Result 3: Feature Importance Analysis
 
-**Reproduced by**: Flow correlation experiments (see `correlation/README.md`)
+Packet counts and timing features are the most important features for website fingerprinting attacks. This claim is reproducible by executing [Experiment 3](#experiment-3-feature-importance-analysis). We report these results in Table 3, Table 5, Table 8 and Table 9 of our paper.
 
-#### Result 3: Feature Importance Analysis
+#### Main Result 4: Defense Effectiveness and Overhead
 
-**Claim**: Packet counts and timing features are the most important features for website fingerprinting attacks.
-
-**Reproduced by**: Feature importance analysis using Random Forest (see `feature_importance/README.md`)
-
-#### Result 4: Defense Effectiveness and Overhead
-
-**Claim**: WTF4NYM defense reduces attack accuracy while introducing acceptable bandwidth and time overhead.
-
-**Reproduced by**: Comparison of attack performance across defense configurations and overhead analysis (see `captures/analysis/README.md`)
+WTF4NYM defense reduces attack accuracy while introducing acceptable bandwidth and time overhead. This claim is reproducible by executing [Experiment 4](#experiment-4-traffic-capture-and-defense-overhead-analysis). We report these results in Table 2, Table 4, Table 6 and Table 7 of our paper.
 
 ### Experiments
 
@@ -278,13 +270,15 @@ The artifact is organized into modular components, each with detailed instructio
 
 #### Experiment 1: Website Fingerprinting Attacks
 
-**Purpose**: Evaluate WF attacks (k-FP, DF, Tik-Tok, SVM) on captured traffic with different defense configurations.
-This is used in Table 2, Table 4, Table 6, Table 7 and Table 9.
+- **Time**: 4-8 hours with GPU per configuration (5-fold CV), 20-40 hours CPU-only
+- **Storage**: ~20GB per configuration
+
+This experiment reproduces [Main Result 1](#main-result-1-website-fingerprinting-attacks-on-nymtor). Evaluate WF attacks (k-FP, DF, Tik-Tok, SVM) on captured traffic with different defense configurations.
 
 **Location**: `WF_attacks/`
 
-**Documentation**: See `WF_attacks/README.md` for:
-- Setup instructions (cloning ExplainWF framework and applying patches)
+**Documentation**: See `WF_attacks/README.md` for detailed instructions on:
+- Setup (cloning ExplainWF framework and applying patches)
 - Training models with 5-fold cross-validation
 - Dataset format (pickle files in `data/train_test_WF/`)
 - Expected outputs and evaluation metrics
@@ -297,12 +291,14 @@ python train_test.py <output_dir> <pickle_files...>
 
 #### Experiment 2: Flow Correlation Attacks
 
-**Purpose**: Train and evaluate MixMatch-based flow correlation models to match traffic at different observation points.
-This is used in Figure 7.
+- **Time**: 12-16 hours with GPU
+- **Storage**: ~15GB
+
+This experiment reproduces [Main Result 2](#main-result-2-flow-correlation-attack). Train and evaluate MixMatch-based flow correlation models to match traffic at different observation points.
 
 **Location**: `correlation/`
 
-**Documentation**: See `correlation/README.md` for:
+**Documentation**: See `correlation/README.md` for detailed instructions on:
 - Data preparation pipeline
 - Training correlation models with/without defense
 - ROC curve generation and comparison
@@ -312,12 +308,14 @@ This is used in Figure 7.
 
 #### Experiment 3: Feature Importance Analysis
 
-**Purpose**: Analyze which traffic features are most important for WF attacks using Random Forest feature importance.
-This is used in Table 3, Table 5, Table 8 and Table 9.
+- **Time**: 2-3 hours
+- **Storage**: ~5GB
+
+This experiment reproduces [Main Result 3](#main-result-3-feature-importance-analysis). Analyze which traffic features are most important for WF attacks using Random Forest feature importance.
 
 **Location**: `feature_importance/`
 
-**Documentation**: See `feature_importance/README.md` for:
+**Documentation**: See `feature_importance/README.md` for detailed instructions on:
 - Feature extraction methodology
 - Random Forest training and feature importance computation
 - Visualization of results
@@ -326,12 +324,14 @@ This is used in Table 3, Table 5, Table 8 and Table 9.
 
 #### Experiment 4: Traffic Capture and Defense Overhead Analysis
 
-**Purpose**: Capture traffic, apply WTF4NYM defense, and measure bandwidth/time overhead.
-This is used in Table 2, Table 4, Table 6 and Table 7.
+- **Time**: 30-45 minutes (using pre-captured data)
+- **Storage**: ~10GB
+
+This experiment reproduces [Main Result 4](#main-result-4-defense-effectiveness-and-overhead). Analyze pre-captured traffic with WTF4NYM defense applied and measure bandwidth/time overhead.
 
 **Location**: `captures/`
 
-**Documentation**: See `captures/README.md` and `captures/analysis/README.md` for:
+**Documentation**: See `captures/README.md` and `captures/analysis/README.md` for detailed instructions on:
 - Traffic capture pipeline
 - Defense implementation and parameter configuration
 - Overhead computation methodology
@@ -431,7 +431,7 @@ You can cite our work with the following BibTeX entry:
 
 ```bibtex
 @inproceedings{jolles2026WFonNym,
- author = {Jollès, Eric and Wicky, Simon and Ania M., Piotrowsak and Harry, Halpin an Carmela, Troncoso},
+ author = {Jollès, Eric and Wicky, Simon and Ania M., Piotrowsak and Harry, Halpin and Carmela, Troncoso},
  booktitle = {},
  title = {{Website Fingerprinting on Nym: Attacks and Defenses}},
  year = {2026},
