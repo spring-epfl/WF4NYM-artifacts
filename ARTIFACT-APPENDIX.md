@@ -104,7 +104,7 @@ If you want to verify the functionality of the code on a subset of the data, we 
 
 ```bash
 git clone git@github.com:spring-epfl/WF4NYM-artifacts.git
-cd Artifacts_PETs_WF4NYM
+cd WF4NYM-artifacts
 ```
 
 **Step 2: Set up Python virtual environment**
@@ -165,7 +165,8 @@ The artifact can be tested using Docker to ensure a reproducible environment. Th
 **Step 1: Build and launch the Docker container** (~10 minutes)
 
 ```bash
-cd Artifacts_PETs_WF4NYM
+git clone git@github.com:spring-epfl/WF4NYM-artifacts.git
+cd WF4NYM-artifacts
 docker compose up --build
 ```
 
