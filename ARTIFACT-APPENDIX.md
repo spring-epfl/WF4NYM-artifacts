@@ -97,6 +97,9 @@ The artifact is permanently archived on Zenodo with a specific DOI for long-term
 
 ### Set up the environment
 
+There are two ways to setup the environment.
+If you want to verify the functionality of the code on a subset of the data, we recommend you use our docker setup in [Reproducing results](#reproducing-results) otherwise here is the full stup for the pipeline.
+
 **Step 1: Clone the repository**
 
 ```bash
@@ -153,7 +156,7 @@ cd ..
 
 Expected output: All ZIP files are downloaded and extracted successfully. The `data/` directory should contain approximately 100GB of data across all subdirectories.
 
-### Testing the Environment
+### Reproducing results
 
 The artifact can be tested using Docker to ensure a reproducible environment. The following steps demonstrate the complete workflow: processing raw packet captures (PCAP files) into machine learning format, then using this processed data for feature importance analysis and website fingerprinting attacks.
 
