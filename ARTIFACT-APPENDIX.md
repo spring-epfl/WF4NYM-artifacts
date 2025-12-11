@@ -80,7 +80,6 @@ See `data/README.md` for complete dataset documentation.
 **Artifact Repository**: 
 https://github.com/spring-epfl/WF4NYM-artifacts
 
-The repository is publicly accessible without any restrictions.
 
 **Datasets**:
 Zenodo DOI: https://doi.org/10.5281/zenodo.17840656
@@ -330,7 +329,7 @@ This experiment reproduces [Main Result 4](#main-result-4-defense-effectiveness-
 
 **Traffic Collection**: 
 - The original traffic collection scripts in `captures/` are provided but are **not reproducible** for artifact evaluation
-- Requires specific network setup (Tor/Nym clients, network configuration) and **Nym API keys**
+- Requires specific network setup and **Nym API keys**
 - Traffic capture is a **long-running process** (days to weeks depending on the dataset size)
 - Network conditions, Tor circuit selection, and Nym network state vary over time, so recaptured traffic will differ from our datasets
 - **Mitigation**: We provide complete pre-captured datasets for all experiments, so reviewers do not need to run the capture scripts
