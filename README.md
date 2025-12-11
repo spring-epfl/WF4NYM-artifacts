@@ -80,7 +80,6 @@ See `data/README.md` for complete dataset documentation.
 **Artifact Repository**: 
 https://github.com/spring-epfl/WF4NYM-artifacts
 
-The repository is publicly accessible without any restrictions.
 
 **Datasets**:
 Zenodo DOI: https://doi.org/10.5281/zenodo.17840656
@@ -98,7 +97,7 @@ The artifact is permanently archived on Zenodo with a specific DOI for long-term
 ### Set up the environment
 
 There are two ways to setup the environment.
-If you want to verify the functionality of the code on a subset of the data, we recommend you use our docker setup in [Reproducing results](#reproducing-results) otherwise here is the full stup for the pipeline.
+If you want to verify the functionality of the code on a subset of the data, we recommend you use our docker setup in [Testing the Environment](#testing-the-environment) otherwise here is the full stup for the pipeline.
 
 **Step 1: Clone the repository**
 
@@ -156,7 +155,7 @@ cd ..
 
 Expected output: All ZIP files are downloaded and extracted successfully. The `data/` directory should contain approximately 100GB of data across all subdirectories.
 
-### Reproducing results
+### Testing the Environment
 
 The artifact can be tested using Docker to ensure a reproducible environment. The following steps demonstrate the complete workflow: processing raw packet captures (PCAP files) into machine learning format, then using this processed data for feature importance analysis and website fingerprinting attacks.
 
@@ -330,7 +329,7 @@ This experiment reproduces [Main Result 4](#main-result-4-defense-effectiveness-
 
 **Traffic Collection**: 
 - The original traffic collection scripts in `captures/` are provided but are **not reproducible** for artifact evaluation
-- Requires specific network setup (Tor/Nym clients, network configuration) and **Nym API keys**
+- Requires specific network setup and **Nym API keys**
 - Traffic capture is a **long-running process** (days to weeks depending on the dataset size)
 - Network conditions, Tor circuit selection, and Nym network state vary over time, so recaptured traffic will differ from our datasets
 - **Mitigation**: We provide complete pre-captured datasets for all experiments, so reviewers do not need to run the capture scripts
@@ -355,6 +354,10 @@ Each component directory contains a detailed README:
 - `feature_importance/README.md` - Feature analysis methodology
 - `data/README.md` - Dataset organization and descriptions
 
+## License
+
+This artifact is released under the MIT License. See the `LICENSE` file in the repository root for full license text.
+
 ## Contact
 
 If there are questions about our tools or paper, please either file an issue or contact `eric.jolles (AT) epfl.ch`
@@ -365,7 +368,7 @@ You can cite our work with the following BibTeX entry:
 
 ```bibtex
 @inproceedings{jolles2026WFonNym,
- author = {Jollès, Eric and Wicky, Simon and Ania M., Piotrowsak and Harry, Halpin and Carmela, Troncoso},
+ author = {Jollès, Eric and Wicky, Simon and Piotrowska, Ania M. and Halpin, Harry and Troncoso, Carmela},
  booktitle = {},
  title = {{Website Fingerprinting on Nym: Attacks and Defenses}},
  year = {2026},
