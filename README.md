@@ -102,7 +102,7 @@ If you want to verify the functionality of the code on a subset of the data, we 
 **Step 1: Clone the repository**
 
 ```bash
-git clone git@github.com:spring-epfl/WF4NYM-artifacts.git
+git clone https://github.com/spring-epfl/WF4NYM-artifacts.git
 cd WF4NYM-artifacts
 ```
 
@@ -164,7 +164,7 @@ The artifact can be tested using Docker to ensure a reproducible environment. Th
 **Step 1: Build and launch the Docker container** (~10 minutes)
 
 ```bash
-git clone git@github.com:spring-epfl/WF4NYM-artifacts.git
+git clone https://github.com/spring-epfl/WF4NYM-artifacts.git
 cd WF4NYM-artifacts
 docker compose up --build
 ```
