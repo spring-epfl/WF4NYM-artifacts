@@ -20,20 +20,28 @@ import logging
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 
-# Add models directory to path
-sys.path.append('/mnt/spring_scratch_pure/ejolles/correlation/models')
+# Add models directory to path (relative to script location)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+models_dir = os.path.abspath(os.path.join(script_dir, '../models'))
+if models_dir not in sys.path:
+    sys.path.append(models_dir)
 from mixmatch_model import SimplifiedDriftModel, MixMatchDataset, save_model
 
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('/mnt/spring_scratch_pure/ejolles/correlation/results/training.log'),
-        logging.StreamHandler()
-    ]
-)
-logger = logging.getLogger(__name__)
+# Setup logging (will be initialized in main with output_dir)
+logger = None
+def setup_logging(output_dir):
+    log_dir = output_dir if output_dir else os.path.join(script_dir, '../results')
+    Path(log_dir).mkdir(parents=True, exist_ok=True)
+    log_file = os.path.join(log_dir, 'training.log')
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler(log_file),
+            logging.StreamHandler()
+        ]
+    )
+    return logging.getLogger(__name__)
 
 def load_training_data(data_dir):
     """
@@ -357,21 +365,21 @@ def create_training_plots(history, output_dir):
 
 def main():
     parser = argparse.ArgumentParser(description='Train MixMatch Drift Classifier')
-    
+
     # Data arguments
-    parser.add_argument('--data_dir', type=str, 
-                       default='/mnt/spring_scratch_pure/ejolles/correlation/data',
+    parser.add_argument('--data_dir', type=str,
+                       default=os.path.abspath(os.path.join(os.path.dirname(__file__), '../data')),
                        help='Directory containing training data')
     parser.add_argument('--output_dir', type=str,
-                       default='/mnt/spring_scratch_pure/ejolles/correlation/results',
+                       default=os.path.abspath(os.path.join(os.path.dirname(__file__), '../results')),
                        help='Directory to save results')
-    
+
     # Model arguments
     parser.add_argument('--kernel_size', type=int, default=8,
                        help='Convolution kernel size')
     parser.add_argument('--pool_size', type=int, default=8,
                        help='Pooling size')
-    
+
     # Training arguments
     parser.add_argument('--epochs', type=int, default=50,
                        help='Number of training epochs')
@@ -383,20 +391,24 @@ def main():
                        help='Weight decay')
     parser.add_argument('--seed', type=int, default=42,
                        help='Random seed')
-    
+
     # Hardware arguments
     parser.add_argument('--cpu', action='store_true',
                        help='Force CPU usage')
-    
+
     # Training options
     parser.add_argument('--early_stopping', action='store_true',
                        help='Enable early stopping')
-    
+
     args = parser.parse_args()
-    
+
     # Create output directory
     Path(args.output_dir).mkdir(parents=True, exist_ok=True)
-    
+
+    # Setup logging with output_dir
+    global logger
+    logger = setup_logging(args.output_dir)
+
     # Start training
     train_model(args)
 

@@ -46,15 +46,6 @@ def load_notebook_data(data_dir):
     except FileNotFoundError:
         print("[WARNING] Extracted data not found, trying notebook data...")
     
-    # Try to load from notebook processing (legacy)
-    try:
-        with open("/mnt/spring_scratch_pure/ejolles/preprocessed_proxy_data.pkl", 'rb') as f:
-            proxy_data = pickle.load(f)
-        print(f"[OK] Loaded {len(proxy_data)} proxy data samples")
-    except FileNotFoundError:
-        print("[ERROR] Preprocessed proxy data not found. Please run the notebook first.")
-        return None, None
-    
     try:
         with open(f"{data_dir}/preprocessed_requester_data.pkl", 'rb') as f:
             requester_data = pickle.load(f)

@@ -508,11 +508,12 @@ def main():
     
     parser.add_argument('--model_path', type=str, required=True,
                        help='Path to trained model')
+        # Data arguments
     parser.add_argument('--data_dir', type=str,
-                       default='/mnt/spring_scratch_pure/ejolles/correlation/data',
-                       help='Directory containing test data')
+                       default=os.path.abspath(os.path.join(os.path.dirname(__file__), '../data')),
+                       help='Directory containing training data')
     parser.add_argument('--output_dir', type=str,
-                       default='/mnt/spring_scratch_pure/ejolles/correlation/results',
+                       default=os.path.abspath(os.path.join(os.path.dirname(__file__), '../results')),
                        help='Directory to save results')
     parser.add_argument('--cpu', action='store_true',
                        help='Force CPU usage')

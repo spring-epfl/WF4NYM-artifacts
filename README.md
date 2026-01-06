@@ -159,7 +159,35 @@ Expected output: All ZIP files are downloaded and extracted successfully. The `d
 
 The artifact can be tested using Docker to ensure a reproducible environment. The following steps demonstrate the complete workflow: processing raw packet captures (PCAP files) into machine learning format, then using this processed data for feature importance analysis and website fingerprinting attacks.
 
+
 #### Quick Start with Docker
+
+
+**Note on Docker Execution:**
+
+The Docker setup is configured for **CPU-only execution** and works on all platforms (Linux, macOS, Windows). GPU acceleration is not enabled in the Docker container. If you need GPU support for faster training, run experiments natively on your host system with GPU drivers installed.
+
+To start the Docker container:
+```bash
+docker compose up --build
+```
+
+**Mounting Data into Docker:**
+If you downloaded the datasets outside Docker, mount your local data directory into the container using the `volumes` option in `docker-compose.yml`:
+
+```yaml
+services:
+  wf4nym:
+    # ...existing config...
+    volumes:
+      - /path/to/local/data:/workspace/data
+```
+
+Or, if running with `docker run`:
+
+```bash
+docker run -v /path/to/local/data:/workspace/data wf4nym-artifact:latest
+```
 
 **Step 1: Build and launch the Docker container** (~10 minutes)
 

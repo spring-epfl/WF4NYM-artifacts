@@ -64,6 +64,9 @@ pip install -r ../requirements.txt
 
 ### Training Models with 5-Fold Cross-Validation
 
+
+**Note:** The current `train_test.py` implementation only trains and evaluates the Tik-Tok model. k-FP, DF, and SVM are not included in this script.
+
 The `train_test.py` script performs **5-fold cross-validation** training and evaluation. This splits the data into 5 folds and trains on 4 folds while testing on the remaining fold, repeating for each fold.
 
 **Basic Usage:**
