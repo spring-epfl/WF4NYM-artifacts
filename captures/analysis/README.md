@@ -2,6 +2,9 @@
 
 This directory contains notebooks for creating WTF4NYM defense traces, computing overhead metrics, and converting traffic captures to ML-ready format on Nym mixnet and Tor network traffic.
 
+## Input Data
+Processed traffic traces from `../../data/` directory in format: `<website_url> <num_packets> <timestamp1>:<size1> <timestamp2>:<size2> ...` where positive sizes are incoming packets and negative sizes are outgoing packets.
+
 ## Notebooks
 
 ### `transform_to_ml.ipynb`
@@ -34,5 +37,24 @@ Notebook for generating WTF4NYM defense traffic traces by applying cover traffic
 ### `overheads.ipynb`
 Notebook for computing latency and bandwidth overhead introduced by various defense mechanisms across different Nym configurations.
 
-## Input Data
-Processed traffic traces from `../../data/` directory in format: `<website_url> <num_packets> <timestamp1>:<size1> <timestamp2>:<size2> ...` where positive sizes are incoming packets and negative sizes are outgoing packets.
+### `overheads.py`
+**Purpose**: Command-line script for computing latency and bandwidth overhead metrics.
+
+**Features**:
+- Load pre-computed traffic information from pickle files
+- Process raw traffic data from directories
+- Compare multiple configurations against a baseline
+- Display overhead metrics in formatted tables
+
+**Output Metrics**:
+- **Latency**: Time overhead as percentage increase over baseline
+- **Incoming Bytes**: Incoming bandwidth overhead as percentage increase
+- **Outgoing Bytes**: Outgoing bandwidth overhead as percentage increase
+- **Bandwidth**: Total bandwidth overhead as percentage increase
+
+**Usage**:
+
+```bash
+python overheads.py --pickle ../../data/overheads/infos.pkl --compare \
+    tor_full nym_labnet_full nym_mainnet_full
+```
