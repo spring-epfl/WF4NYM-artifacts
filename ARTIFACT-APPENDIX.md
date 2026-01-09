@@ -44,7 +44,14 @@ The artifact can run on commodity hardware without GPU (using CPU), but training
 - May work on: macOS with appropriate dependencies
 
 **Python Environment**:
-- Python 3.9
+- Python 3.9 (tested with Python 3.9.13)
+
+**Note on GPU libraries**:
+- If you plan to use GPUs, install a PyTorch build compatible with your GPU's CUDA capability. Some experiments may also require `torchvision` when using GPU-accelerated workflows; install a `torchvision` version that matches your chosen PyTorch+CUDA build.
+- Example guidance:
+  - Older GPUs (e.g., NVIDIA GeForce GTX TITAN X, compute capability 5.2) are compatible with older PyTorch+CUDA builds such as `torch==1.13.1+cu117` and a matching `torchvision` release.
+  - Newer GPUs should use the latest PyTorch CUDA build recommended at https://pytorch.org/get-started/locally/.
+- We let users choose the specific PyTorch/torchvision versions that match their host GPU and drivers; see PyTorch's installation selector for the correct wheel tags.
 
 **Python Dependencies**:
 See `requirements.txt`
@@ -159,7 +166,35 @@ Expected output: All ZIP files are downloaded and extracted successfully. The `d
 
 The artifact can be tested using Docker to ensure a reproducible environment. The following steps demonstrate the complete workflow: processing raw packet captures (PCAP files) into machine learning format, then using this processed data for feature importance analysis and website fingerprinting attacks.
 
+
 #### Quick Start with Docker
+
+
+**Note on Docker Execution:**
+
+The Docker setup is configured for **CPU-only execution** and works on all platforms (Linux, macOS, Windows). GPU acceleration is not enabled in the Docker container. If you need GPU support for faster training, run experiments natively on your host system with GPU drivers installed.
+
+To start the Docker container:
+```bash
+docker compose up --build
+```
+
+**Mounting Data into Docker:**
+If you downloaded the datasets outside Docker, mount your local data directory into the container using the `volumes` option in `docker-compose.yml`:
+
+```yaml
+services:
+  wf4nym:
+    # ...existing config...
+    volumes:
+      - /path/to/local/data:/workspace/data
+```
+
+Or, if running with `docker run`:
+
+```bash
+docker run -v /path/to/local/data:/workspace/data wf4nym-artifact:latest
+```
 
 **Step 1: Build and launch the Docker container** (~10 minutes)
 

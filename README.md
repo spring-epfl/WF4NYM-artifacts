@@ -44,7 +44,14 @@ The artifact can run on commodity hardware without GPU (using CPU), but training
 - May work on: macOS with appropriate dependencies
 
 **Python Environment**:
-- Python 3.9
+- Python 3.9 (tested with Python 3.9.13)
+
+**Note on GPU libraries**:
+- If you plan to use GPUs, install a PyTorch build compatible with your GPU's CUDA capability. Some experiments may also require `torchvision` when using GPU-accelerated workflows; install a `torchvision` version that matches your chosen PyTorch+CUDA build.
+- Example guidance:
+  - Older GPUs (e.g., NVIDIA GeForce GTX TITAN X, compute capability 5.2) are compatible with older PyTorch+CUDA builds such as `torch==1.13.1+cu117` and a matching `torchvision` release.
+  - Newer GPUs should use the latest PyTorch CUDA build recommended at https://pytorch.org/get-started/locally/.
+- We let users choose the specific PyTorch/torchvision versions that match their host GPU and drivers; see PyTorch's installation selector for the correct wheel tags.
 
 **Python Dependencies**:
 See `requirements.txt`
