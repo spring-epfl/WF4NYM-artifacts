@@ -41,9 +41,9 @@ Positive bytes indicate incoming packets, negative bytes indicate outgoing packe
 ### Training with WTF4NYM defense:
 ```bash
 ./launch_training.sh \
-    --input-dir-proxy ../data/reduced_list/correlation_with_WTF4NYM/proxy/ \
-    --input-dir-requester ../data/reduced_list/correlation_with_WTF4NYM/network_requester/ \
-    --output-dir data_with_WTF4NYM \
+    --input-dir-proxy ../data/reduced_list/correlation_with_defense/proxy/ \
+    --input-dir-requester ../data/reduced_list/correlation_with_defense/network_requester/ \
+    --output-dir data_with_defense \
     --websites 55 \
     --epochs 100
 ```
@@ -51,7 +51,7 @@ Positive bytes indicate incoming packets, negative bytes indicate outgoing packe
 ### Compare results:
 ```bash
 python scripts/compare_roc_curves.py \
-    --results-dirs data_without_defense/results data_with_WTF4NYM/results \
+    --results-dirs data_without_defense/results data_with_defense/results \
     --labels "Without WTF4NYM" "With WTF4NYM" \
     --output-dir roc_comparison \
     --title "MixMatch Model Comparison: With vs Without defence"
