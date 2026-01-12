@@ -12,6 +12,11 @@ We use the ExplainWF framework ([Jansen et al., PoPETs 2023](https://explainwf-p
 
 ## Setup
 
+**Important: Python Version Requirement**
+
+The ExplainWF framework requires **Python 3.9 or 3.10** due to TensorFlow 2.10 dependency constraints (TensorFlow 2.10 does not support Python 3.11+).
+
+
 ### 1. Download ExplainWF Framework
 
 ```bash
@@ -49,9 +54,12 @@ cp ../../../train_test.py ./
 ### 3. Install Dependencies
 
 ```bash
-# Create Python virtual environment
+# Create Python virtual environment (make sure you're using Python 3.9 or 3.10)
 python3 -m venv venv
 source venv/bin/activate
+
+# Verify Python version
+python --version  # Should show Python 3.9.x or 3.10.x
 
 # Install dependencies
 pip install --upgrade pip

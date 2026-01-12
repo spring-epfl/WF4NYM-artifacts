@@ -44,7 +44,8 @@ The artifact can run on commodity hardware without GPU (using CPU), but training
 - May work on: macOS with appropriate dependencies
 
 **Python Environment**:
-- Python 3.9 (tested with Python 3.9.13)
+- Python 3.9 or 3.10 (tested with Python 3.9.13 and 3.10.13)
+- **Note**: Python 3.11+ is not supported due to TensorFlow 2.10 compatibility requirements in the ExplainWF framework (Experiment 1)
 
 **Note on GPU libraries**:
 - If you plan to use GPUs, install a PyTorch build compatible with your GPU's CUDA capability. Some experiments may also require `torchvision` when using GPU-accelerated workflows; install a `torchvision` version that matches your chosen PyTorch+CUDA build.
@@ -280,6 +281,7 @@ The artifact is organized into modular components, each with detailed instructio
 
 - **Time**: 4-8 hours with GPU per configuration (5-fold CV), 20-40 hours CPU-only
 - **Storage**: ~20GB per configuration
+- **Python Version**: Requires Python 3.9 or 3.10 (ExplainWF framework uses TensorFlow 2.10 which requires Python < 3.11)
 
 This experiment reproduces [Main Result 1](#main-result-1-website-fingerprinting-attacks-on-nymtor). Evaluate WF attacks (k-FP, DF, Tik-Tok, SVM) on captured traffic with different defense configurations.
 
@@ -287,6 +289,7 @@ This experiment reproduces [Main Result 1](#main-result-1-website-fingerprinting
 
 **Documentation**: See `WF_attacks/README.md` for detailed instructions on:
 - Setup (cloning ExplainWF framework and applying patches)
+- Python version requirements (3.9 or 3.10)
 - Training models with 5-fold cross-validation
 - Dataset format (pickle files in `data/train_test_WF/`)
 - Expected outputs and evaluation metrics
