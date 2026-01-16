@@ -118,7 +118,7 @@ cd WF4NYM-artifacts
 
 ```bash
 python3 -m venv venv
-source venv/bin/activate
+. venv/bin/activate
 pip install --upgrade pip
 ```
 
@@ -243,7 +243,7 @@ In the Jupyter Lab terminal, run:
 ```bash
 cd /workspace/WF_attacks/explainwf-popets2023.github.io/ml/code
 python3 -m venv venv
-source venv/bin/activate
+. venv/bin/activate
 pip install -r ../requirements.txt  # ~3 minutes
 python train_test.py /workspace/data/3_ml_format/data.pkl /workspace/output  # ~40 minutes
 ```

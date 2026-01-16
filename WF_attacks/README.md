@@ -56,7 +56,7 @@ cp ../../../train_test.py ./
 ```bash
 # Create Python virtual environment (make sure you're using Python 3.9 or 3.10)
 python3 -m venv venv
-source venv/bin/activate
+. venv/bin/activate
 
 # Verify Python version
 python --version  # Should show Python 3.9.x or 3.10.x

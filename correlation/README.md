@@ -27,6 +27,27 @@ google.com 0 15234 100.5:1500 101.2:-800 102.3:2000 ...
 
 Positive bytes indicate incoming packets, negative bytes indicate outgoing packets.
 
+### Expected Directory Structure
+
+The correlation datasets must follow this structure with separate directories for proxy-side and network-requester-side observations:
+
+```
+
+correlation_folder/
+├── proxy/
+│   ├── website1
+│   ├── website2
+│   └── ...
+└── network_requester/
+    ├── website1
+    ├── website2
+    └── ...
+```
+
+Each file contains traffic traces in the format described above, with one trace per line. The proxy and network_requester directories contain observations of the same websites from different vantage points in the Nym network.
+
+Note : in our dataset we have 2 folders containing captures for correlation analysis: ```../data/reduced_list/correlation_without_defense``` and ```../data/reduced_list/correlation_with_defense```
+
 
 ### Training without defense:
 ```bash

@@ -17,6 +17,8 @@ ENV/
 
 # Data directories
 data/
+data_with_WTF4NYM/
+data_without_defense/
 
 # IDE
 .vscode/
